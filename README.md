@@ -25,21 +25,17 @@ Note:
 
 ## Group members
 
-[delete this line and enter your names here]
-
-## Group name (optional):
-
-[delete this line and enter your group name here; if you don't have one, delete the whole section]
+Sofia favela,
+## Group name (optional): 
+The Geese 
 
 ## Topic information and question
 
-**Topic:**  
-
-[delete this line and enter your topic here]
+**Topic: Bird Abundnace and Precipitation 
 
 **Question(s):**  
 
-[delete this line and enter your bullet point list here]
+ What are the effects of precipitation of bird abundance? .
 
 **Response variable(s)**
 
@@ -47,9 +43,7 @@ Note:
 
 ## Datasets
 
-**Datasets used:**
-
-[delete this line and enter your bullet point list here]
+bird_abundance_waterfowl
 
 ## Figures
 
@@ -77,16 +71,13 @@ Note:
 
 **Natural history/framing director:**
 
-[delete this line and enter your own text here]
-
+Kelsey Hammond
 **Stats and visualization director**
-
-[delete this line and enter your own text here]
+Nina Cutner
 
 **GitHub/code director**
 
-[delete this line and enter your own text here]
-
+Sofia Favela 
 
 ## Elective (not required for all groups or group members)
 
