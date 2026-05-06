@@ -25,7 +25,7 @@ Note:
 
 ## Group members
 
-Sofia favela,
+Sofia Favela, Kelsey Hammond, Nina Cutner
 ## Group name (optional): 
 The Geese 
 
@@ -35,15 +35,16 @@ The Geese
 
 **Question(s):**  
 
- What are the effects of precipitation of bird abundance? .
+ What are the effects of precipitation on bird abundance (waterfowl)? .
 
 **Response variable(s)**
 
-[delete this line and enter your bullet point list here]
+- waterfowl abundance
 
 ## Datasets
 
-bird_abundance_waterfowl
+- birds.csv
+- NOAA_daily_summaries_USW00053152_full_2025-12-09.csv
 
 ## Figures
 
@@ -72,7 +73,9 @@ bird_abundance_waterfowl
 **Natural history/framing director:**
 
 Kelsey Hammond
+
 **Stats and visualization director**
+
 Nina Cutner
 
 **GitHub/code director**
@@ -83,11 +86,12 @@ Sofia Favela
 
 **Group members completing elective:**
 
-[delete this line and enter your own text here]
+Kelsey Hammond, Sofia Favela, Nina Cutner
 
 **Elective idea:**
 
-[delete this line and enter your own text here]
+Create a physical collage using different materials (photos, magazine cut-outs,
+feathers, etc) representing waterfowl at NCOS and the effects of precipitation
 
 **Elective timeline (what you will have completed each week):**
 
