@@ -52,17 +52,22 @@ The Geese
 
 [delete this line and enter your figure here]
 
+- abundance across seasons
+- strip chart with standard deviation
+
 **Potential figure 2:**
 
 [delete this line and enter your figure here; if you don't have one, delete the entire section]
+
+- precipitation against abundance
+- scatterplot with line of best fit
 
 **Potential figure 3:**
 
 [delete this line and enter your figure here; if you don't have one, delete the entire section]
 
-**Potential figure 4**
-
-[delete this line and enter your figure here; if you don't have one, delete the entire section]
+- precipitation across seasons
+- strip chart with standard deviation
 
 ## Data cleaning/wrangling/summarizing plan
 
@@ -95,15 +100,15 @@ feathers, etc) representing waterfowl at NCOS and the effects of precipitation
 
 **Elective timeline (what you will have completed each week):**
 
-Week 7: enter your own text here
+Week 7: Gather materials and take photographs at NCOS
 
-Week 8 (timeline check in): enter your own text here
+Week 8 (timeline check in): Continue to gather materials for collage.
 
-Week 9: enter your own text here
+Week 9: Have rough draft/outline completed.
 
-Week 10: enter your own text here
+Week 10: Assemble collage, must be done by end of week 10.
 
-Finals week: enter your own text here
+Finals week: Submit elective.
 
 
 
