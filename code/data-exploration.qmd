@@ -43,7 +43,8 @@ birds_clean <- birds |>
 #| label: cleaning-weather
 
 weather_clean <- weather |> 
-  filter(DATE > "2019-09-30" & DATE < "2025-10-01")
+  filter(DATE > "2019-09-30" & DATE < "2025-10-01") |> 
+  
 
 ```
 
@@ -67,8 +68,20 @@ ggplot(data = bird_weather,
        mapping = aes(x = PRCP,
                      y = count,
                      color = species)) +
-  geom_point() +
+  geom_jitter(height = 0,
+              width = 0.1,
+              shape = 21) +
   facet_wrap(~season, scales = "free")
   
+```
+
+```{r}
+#| label: abundance-time-plot
+
+ggplot(data = bird_weather,
+       mapping = aes(x = observation_date,
+                     y = count,
+                     color = species)) +
+  geom_jitter(shape = 21)
 ```
 

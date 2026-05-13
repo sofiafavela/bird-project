@@ -78,6 +78,7 @@ For birds.csv:
 
 For NOAA_daily_summaries.csv:
 - filter to only include obs from water years 2020-2025
+- calculate total monthly precipitation
 
 Must be joined together by date.
 
