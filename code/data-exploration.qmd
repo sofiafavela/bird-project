@@ -13,6 +13,8 @@ library(tidyverse)
 library(here)
 
 library(scales)
+
+library(snakecase)
 ```
 
 # Data
@@ -42,5 +44,31 @@ birds_clean <- birds |>
 
 weather_clean <- weather |> 
   filter(DATE > "2019-09-30" & DATE < "2025-10-01")
+
+```
+
+```{r}
+#| label: joining-data-frames
+
+bird_weather <- full_join(
+  x = birds_clean,
+  y = weather_clean,
+  by = c("observation_date" = "DATE")) |> 
+  select(c(observation_date, season, species, count, PRCP))
+```
+
+
+# trying visualizations
+
+```{r}
+#| label: trying-visualization
+
+ggplot(data = bird_weather,
+       mapping = aes(x = PRCP,
+                     y = count,
+                     color = species)) +
+  geom_point() +
+  facet_wrap(~season, scales = "free")
+  
 ```
 

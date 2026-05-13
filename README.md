@@ -79,6 +79,8 @@ For birds.csv:
 For NOAA_daily_summaries.csv:
 - filter to only include obs from water years 2020-2025
 
+Must be joined together by date.
+
 ## Project roles
 
 **Natural history/framing director:**
