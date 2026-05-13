@@ -1,0 +1,39 @@
+---
+title: "data exploration"
+format: pdf
+---
+
+# Packages
+
+```{r}
+#| label: packages
+
+library(tidyverse)
+
+library(here)
+
+library(scales)
+```
+
+# Data
+
+```{r}
+#| label: data
+
+birds <- read.csv("birds.csv")
+
+weather <- read.csv("NOAA_daily_summaries.csv")
+```
+
+# Cleaning Data
+
+```{r}
+#| label: cleaning-birds
+
+birds_clean <- birds |> 
+  filter(e_bird_group == "Waterfowl",
+         repeat_observation == "No",
+         observation_date > "2019-09-30" & observation_date < "2025-10-01")
+
+```
+

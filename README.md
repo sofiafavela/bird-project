@@ -71,7 +71,13 @@ The Geese
 
 ## Data cleaning/wrangling/summarizing plan
 
-[delete this line and enter your own text here]
+For birds.csv:
+- filter to only include 'waterfowl' e_bird_group
+- filter for 'no' repeat observations
+- filter to only include water years 2020-2025
+
+For NOAA_daily_summaries.csv:
+- filter to only include obs from water years 2020-2025
 
 ## Project roles
 
