@@ -20,9 +20,9 @@ library(scales)
 ```{r}
 #| label: data
 
-birds <- read.csv("birds.csv")
+birds <- read.csv(here("data", "birds.csv"))
 
-weather <- read.csv("NOAA_daily_summaries.csv")
+weather <- read.csv(here("data", "NOAA_daily_summaries.csv"))
 ```
 
 # Cleaning Data
@@ -35,5 +35,12 @@ birds_clean <- birds |>
          repeat_observation == "No",
          observation_date > "2019-09-30" & observation_date < "2025-10-01")
 
+```
+
+```{r}
+#| label: cleaning-weather
+
+weather_clean <- weather |> 
+  filter(DATE > "2019-09-30" & DATE < "2025-10-01")
 ```
 
