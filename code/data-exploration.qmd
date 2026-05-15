@@ -8,12 +8,16 @@ format: pdf
 ```{r}
 #| label: packages
 
+# data wrangling and visualization
 library(tidyverse)
 
+# allows file paths to work across computers
 library(here)
 
+# formatting axis labels
 library(scales)
 
+# working with dates
 library(lubridate)
 ```
 
@@ -22,8 +26,10 @@ library(lubridate)
 ```{r}
 #| label: data
 
+# read in bird survey data
 birds <- read.csv(here("data", "birds.csv"))
 
+# read in NOAA weather data
 weather <- read.csv(here("data", "NOAA_daily_summaries.csv"))
 ```
 
@@ -33,13 +39,23 @@ weather <- read.csv(here("data", "NOAA_daily_summaries.csv"))
 #| label: cleaning-birds
 
 birds_clean <- birds |> 
+  # convert observation date to date format
   mutate(
     observation_date = ymd(observation_date),
-    month = floor_date(observation_date, unit = "month")
+    
+    # create monthly grouping variable
+    month = floor_date(observation_date,
+                       unit = "month")
   ) |> 
+  
+  # filter to only include waterfowl observations
   filter(
     e_bird_group == "Waterfowl",
+    
+    # remove repeat observations
     repeat_observation == "No",
+    
+    # keep observations within study period
     observation_date > ymd("2019-09-30"),
     observation_date < ymd("2025-10-01")
   )
@@ -49,10 +65,17 @@ birds_clean <- birds |>
 #| label: cleaning-weather
 
 weather_clean <- weather |> 
+  
+  # convert date column to date format
   mutate(
     DATE = ymd(DATE),
-    month = floor_date(DATE, unit = "month")
+    
+    # create monthly grouping variable
+    month = floor_date(DATE,
+                       unit = "month")
   ) |> 
+  
+  # filter to study period
   filter(
     DATE > ymd("2019-09-30"),
     DATE < ymd("2025-10-01")
@@ -62,13 +85,103 @@ weather_clean <- weather |>
 ```{r}
 #| label: joining-data-frames
 
+# join bird and weather data by exact date
 bird_weather <- full_join(
   x = birds_clean,
   y = weather_clean,
-  by = c("observation_date" = "DATE")) |> 
-  select(c(observation_date, season, species, count, PRCP))
+  
+  # match bird observation dates to weather dates
+  by = c("observation_date" = "DATE")
+) |> 
+  
+  # keep only variables of interest
+  select(
+    observation_date,
+    season,
+    species,
+    count,
+    PRCP
+  )
 ```
 
+# Summaries
+
+```{r}
+#| label: monthly-precipitation
+
+# calculate total monthly precipitation
+monthly_precip <- weather_clean |> 
+  
+  # group observations by month
+  group_by(month) |> 
+  
+  # sum precipitation within each month
+  summarize(
+    monthly_prcp = sum(PRCP, na.rm = TRUE),
+    
+    # remove grouping after summarizing
+    .groups = "drop"
+  )
+```
+
+```{r}
+#| label: monthly-waterfowl-abundance
+
+# calculate monthly abundance by species
+monthly_waterfowl <- birds_clean |> 
+  
+  # group by month and species
+  group_by(month, species) |> 
+  
+  # sum bird counts within each month
+  summarize(
+    abundance = sum(count, na.rm = TRUE),
+    
+    # remove grouping after summarizing
+    .groups = "drop"
+  )
+```
+
+```{r}
+#| label: total-monthly-waterfowl
+
+# calculate total monthly waterfowl abundance
+total_monthly_waterfowl <- birds_clean |> 
+  
+  # group by month
+  group_by(month) |> 
+  
+  # sum all bird counts within each month
+  summarize(
+    total_abundance = sum(count, na.rm = TRUE),
+    
+    # remove grouping after summarizing
+    .groups = "drop"
+  )
+```
+
+# Joining data
+
+```{r}
+#| label: joining-monthly-data
+
+# join monthly bird abundance with monthly precipitation
+bird_weather_monthly <- total_monthly_waterfowl |> 
+  
+  # join by month
+  left_join(monthly_precip,
+            by = "month") |> 
+  
+  # arrange chronologically
+  arrange(month) |> 
+  
+  # create lagged precipitation variable
+  mutate(
+    
+    # previous month's precipitation
+    lagged_prcp = lag(monthly_prcp)
+  )
+```
 
 # trying visualizations
 
