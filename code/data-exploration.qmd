@@ -185,5 +185,85 @@ bird_weather_monthly <- total_monthly_waterfowl |>
 
 # trying visualizations
 
+## Figure 1: Monthly Precipitation Through Time
 
+```{r}
+#| label: figure-1-precipitation
+#| fig-width: 10
+#| fig-height: 5
+
+ggplot(data = monthly_precip,
+       
+       # x-axis = month
+       # y-axis = total monthly precipitation
+       mapping = aes(x = month,
+                     y = monthly_prcp)) +
+  
+  # create line graph
+  geom_line() +
+  
+  # add plot labels
+  labs(
+    title = "Monthly Precipitation Through Time",
+    x = "Date",
+    y = "Monthly precipitation"
+  )
+```
+
+## Figure 2: Waterfowl Abundance Through Time
+
+```{r}
+#| label: figure-2-waterfowl
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data = monthly_waterfowl,
+       
+       # x-axis = month
+       # y-axis = abundance
+       # fill by species
+       mapping = aes(x = month,
+                     y = abundance,
+                     fill = species)) +
+  
+  # create stacked area chart
+  geom_area() +
+  
+  # add plot labels
+  labs(
+    title = "Monthly Waterfowl Abundance Through Time",
+    x = "Date",
+    y = "Monthly abundance",
+    fill = "Species"
+  )
+```
+
+## Figure 3: Lagged Precipation vs Water
+
+```{r}
+#| label: figure-3-relationship
+#| fig-width: 7
+#| fig-height: 5
+
+ggplot(data = bird_weather_monthly,
+       
+       # x-axis = previous month's precipitation
+       # y-axis = current month's abundance
+       mapping = aes(x = lagged_prcp,
+                     y = total_abundance)) +
+  
+  # create scatterplot
+  geom_point() +
+  
+  # add linear trend line
+  geom_smooth(method = "lm",
+              se = FALSE) +
+  
+  # add plot labels
+  labs(
+    title = "Relationship Between Precipitation and Waterfowl Abundance",
+    x = "Previous month's precipitation",
+    y = "Total monthly waterfowl abundance"
+  )
+```
 
