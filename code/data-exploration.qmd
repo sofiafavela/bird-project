@@ -14,7 +14,7 @@ library(here)
 
 library(scales)
 
-library(snakecase)
+library(lubridate)
 ```
 
 # Data
@@ -33,19 +33,30 @@ weather <- read.csv(here("data", "NOAA_daily_summaries.csv"))
 #| label: cleaning-birds
 
 birds_clean <- birds |> 
-  filter(e_bird_group == "Waterfowl",
-         repeat_observation == "No",
-         observation_date > "2019-09-30" & observation_date < "2025-10-01")
-
+  mutate(
+    observation_date = ymd(observation_date),
+    month = floor_date(observation_date, unit = "month")
+  ) |> 
+  filter(
+    e_bird_group == "Waterfowl",
+    repeat_observation == "No",
+    observation_date > ymd("2019-09-30"),
+    observation_date < ymd("2025-10-01")
+  )
 ```
 
 ```{r}
 #| label: cleaning-weather
 
 weather_clean <- weather |> 
-  filter(DATE > "2019-09-30" & DATE < "2025-10-01") |> 
-  
-
+  mutate(
+    DATE = ymd(DATE),
+    month = floor_date(DATE, unit = "month")
+  ) |> 
+  filter(
+    DATE > ymd("2019-09-30"),
+    DATE < ymd("2025-10-01")
+  )
 ```
 
 ```{r}
@@ -61,27 +72,5 @@ bird_weather <- full_join(
 
 # trying visualizations
 
-```{r}
-#| label: trying-visualization
 
-ggplot(data = bird_weather,
-       mapping = aes(x = PRCP,
-                     y = count,
-                     color = species)) +
-  geom_jitter(height = 0,
-              width = 0.1,
-              shape = 21) +
-  facet_wrap(~season, scales = "free")
-  
-```
-
-```{r}
-#| label: abundance-time-plot
-
-ggplot(data = bird_weather,
-       mapping = aes(x = observation_date,
-                     y = count,
-                     color = species)) +
-  geom_jitter(shape = 21)
-```
 
