@@ -58,7 +58,7 @@ The Geese
 **Potential figure 2:**
 
 ![Waterfowl abundance](figures/waterfowl-abundance.png)
-
+ 
 - monthly waterfowl abundance through time by species
 - stacked area chart
 
