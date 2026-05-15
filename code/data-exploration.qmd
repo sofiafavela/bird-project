@@ -208,7 +208,19 @@ ggplot(data = monthly_precip,
     x = "Date",
     y = "Monthly precipitation"
   )
+
 ```
+
+
+```{r}
+# saving figure 1 to figures folder
+ggsave(
+  filename = here("figures", "monthly-precipitation.png"),
+  width = 10,
+  height = 5
+)
+```
+
 
 ## Figure 2: Waterfowl Abundance Through Time
 
@@ -236,6 +248,14 @@ ggplot(data = monthly_waterfowl,
     y = "Monthly abundance",
     fill = "Species"
   )
+```
+```{r}
+# saving figure 2 to figures folder
+ggsave(
+  filename = here("figures", "waterfowl-abundance.png"),
+  width = 10,
+  height = 6
+)
 ```
 
 ## Figure 3: Lagged Precipation vs Water
@@ -266,4 +286,13 @@ ggplot(data = bird_weather_monthly,
     y = "Total monthly waterfowl abundance"
   )
 ```
+```{r}
+# saving figure 3 to figures folder
+ggsave(
+  filename = here("figures", "precipitation-abundance.png"),
+  width = 7,
+  height = 5
+)
+```
+
 
