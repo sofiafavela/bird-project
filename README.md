@@ -50,24 +50,24 @@ The Geese
 
 **Potential figure 1:**
 
-[delete this line and enter your figure here]
+![Monthly precipitation](figures/monthly-precipitation.png)
 
-- abundance across seasons
-- strip chart with standard deviation
+- monthly precipitation through time
+- line graph (time series)
 
 **Potential figure 2:**
 
-[delete this line and enter your figure here; if you don't have one, delete the entire section]
+![Waterfowl abundance](figures/waterfowl-abundance.png)
 
-- precipitation against abundance
-- scatterplot with line of best fit
+- monthly waterfowl abundance through time by species
+- stacked area chart
 
 **Potential figure 3:**
 
-[delete this line and enter your figure here; if you don't have one, delete the entire section]
+![Precipitation abundance relationship](figures/precipitation-abundance.png)
 
-- precipitation across seasons
-- strip chart with standard deviation
+- relationship between previous month's precipitation and total monthly waterfowl abundance
+- scatter plot with trend line
 
 ## Data cleaning/wrangling/summarizing plan
 
