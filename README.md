@@ -71,7 +71,7 @@ bird_abundance_waterfowl
 
 **Natural history/framing director:**
 
-Kelsey Hammond
+Kselsey Hammond
 **Stats and visualization director**
 Nina Cutner
 
