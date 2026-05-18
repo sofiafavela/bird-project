@@ -208,17 +208,13 @@ ggplot(data = monthly_precip,
     x = "Date",
     y = "Monthly precipitation"
   )
-
-```
-
-
-```{r}
 # saving figure 1 to figures folder
 ggsave(
   filename = here("figures", "monthly-precipitation.png"),
   width = 10,
   height = 5
 )
+
 ```
 
 
@@ -248,8 +244,6 @@ ggplot(data = monthly_waterfowl,
     y = "Monthly abundance",
     fill = "Species"
   )
-```
-```{r}
 # saving figure 2 to figures folder
 ggsave(
   filename = here("figures", "waterfowl-abundance.png"),
@@ -285,8 +279,6 @@ ggplot(data = bird_weather_monthly,
     x = "Previous month's precipitation",
     y = "Total monthly waterfowl abundance"
   )
-```
-```{r}
 # saving figure 3 to figures folder
 ggsave(
   filename = here("figures", "precipitation-abundance.png"),
@@ -294,5 +286,81 @@ ggsave(
   height = 5
 )
 ```
+
+## Potential figure 4 — average abundance across seasons with scaled precipitation line
+
+```{r}
+#|: label: seasonal-summary
+
+seasonal_summary <- bird_weather_monthly |> 
+  
+  # creating season variable from month
+  mutate(
+    season = case_when(
+      month(month) %in% c(12, 1, 2) ~ "Winter",
+      month(month) %in% c(3, 4, 5) ~ "Spring",
+      month(month) %in% c(6, 7, 8) ~ "Summer",
+      TRUE ~ "Fall"
+    ),
+  # order seasons logically
+    season = factor(season,
+                    levels = c("Winter", "Spring", "Summer", "Fall"))
+  ) |> 
+  
+  # summarize across all years
+  group_by(season) |> 
+  summarize(
+    
+    # average total waterfowl abundance per month in each season
+    avg_abundance = mean(total_abundance, na.rm = TRUE),
+    
+    # average monthly precipitation in each season
+    avg_precip = mean(monthly_prcp, na.rm = TRUE),
+    
+    .groups = "drop"
+  )
+  
+```
+
+```{r}
+#| label: figure-4-seasonal-abundance-precip
+#| fig-width: 8
+#| fig-height: 5
+
+# scaling factor so precipitation can be layered on abundance axis
+precip_scale <- max(seasonal_summary$avg_abundance, na.rm = TRUE) /
+  max(seasonal_summary$avg_precip, na.rm = TRUE)
+
+ggplot(data = seasonal_summary,
+       mapping = aes(x = season)) +
+  
+  # bar chart for average abundance
+  geom_col(mapping = aes(y = avg_abundance)) +
+  
+  # precipitation line scaled to abundance axis
+  geom_line(mapping = aes(y = avg_precip * precip_scale,
+                          group = 1),
+            linewidth = 1) +
+  
+  # points on precipitation line
+  geom_point(mapping = aes(y = avg_precip * precip_scale),
+             size = 3) +
+  
+  # add primary and secondary y-axis
+  scale_y_continuous(
+    name = "Average monthly waterfowl abundance",
+    sec.axis = sec_axis(
+      trans = ~ . / precip_scale,
+      name = "Average monthly precipitation"
+    )
+  ) +
+  
+  # add plot labels
+  labs(
+    title = "Average Waterfowl Abundance and Precipitation by Season",
+    x = "Season"
+  )
+```
+
 
 
