@@ -261,17 +261,11 @@ ggsave(
 ## Figure 3: Lagged Precipation vs Water
 
 ```{r}
-library(tidyverse)
-library(lubridate)
-
-bird_weather_monthly <- bird_weather_monthly |>
-  mutate(month_num = month(month))
-
 ggplot(data = bird_weather_monthly,
        mapping = aes(x = lagged_prcp,
                      y = total_abundance,
                      color = month_num)) +
-  geom_point(alpha = 0.7, size = 2) +
+  geom_point(alpha = 0.8, size = 4) +
   scale_color_viridis_c(
     name = "Month",
     option = "turbo",
@@ -285,7 +279,16 @@ ggplot(data = bird_weather_monthly,
     y = "Total monthly waterfowl abundance (individuals)",
     caption = "Each point represents one month's waterfowl abundance plotted against the previous month's precipitation"
   ) +
-  theme_classic()
+  theme_classic(base_family = "Georgia") +
+  theme(
+    legend.key.height = unit(1.5, "cm"),
+    legend.text = element_text(size = 11, family = "Georgia"),
+    legend.title = element_text(size = 12, face = "bold", family = "Georgia"),
+    plot.title = element_text(size = 14, face = "bold", family = "Georgia"),
+    plot.caption = element_text(size = 9, color = "gray50", family = "Georgia"),
+    axis.title = element_text(size = 11, family = "Georgia"),
+    axis.text = element_text(size = 10, family = "Georgia")
+  )
 ```
 ```{r}
 # saving figure 3 to figures folder
