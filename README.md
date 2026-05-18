@@ -86,12 +86,8 @@ Must be joined together by date.
 
 **Natural history/framing director:**
 
-<<<<<<< HEAD
-Kselsey Hammond
-=======
 Kelsey Hammond
 
->>>>>>> d52cc41d2dfcc8eacea4553a7c74e4de9dcad8fb
 **Stats and visualization director**
 
 Nina Cutner
