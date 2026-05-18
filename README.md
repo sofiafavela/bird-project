@@ -25,7 +25,7 @@ Note:
 
 ## Group members
 
-Sofia Favela, Kelsey Hammond, Nina Cutner
+Sofia favela,
 ## Group name (optional): 
 The Geese 
 
@@ -35,65 +35,44 @@ The Geese
 
 **Question(s):**  
 
- What are the effects of precipitation on bird abundance (waterfowl)? .
+ What are the effects of precipitation of bird abundance? .
 
 **Response variable(s)**
 
-- waterfowl abundance
+[delete this line and enter your bullet point list here]
 
 ## Datasets
 
-- birds.csv
-- NOAA_daily_summaries_USW00053152_full_2025-12-09.csv
+bird_abundance_waterfowl
 
 ## Figures
 
 **Potential figure 1:**
 
-![Monthly precipitation](figures/monthly-precipitation.png)
-
-- monthly precipitation through time
-- line graph (time series)
+[delete this line and enter your figure here]
 
 **Potential figure 2:**
 
-![Waterfowl abundance](figures/waterfowl-abundance.png)
- 
-- monthly waterfowl abundance through time by species
-- stacked area chart
+[delete this line and enter your figure here; if you don't have one, delete the entire section]
 
 **Potential figure 3:**
 
-![Precipitation abundance relationship](figures/precipitation-abundance.png)
+[delete this line and enter your figure here; if you don't have one, delete the entire section]
 
-- relationship between previous month's precipitation and total monthly waterfowl abundance
-- scatter plot with trend line
+**Potential figure 4**
+
+[delete this line and enter your figure here; if you don't have one, delete the entire section]
 
 ## Data cleaning/wrangling/summarizing plan
 
-For birds.csv:
-- filter to only include 'waterfowl' e_bird_group
-- filter for 'no' repeat observations
-- filter to only include water years 2020-2025
-
-For NOAA_daily_summaries.csv:
-- filter to only include obs from water years 2020-2025
-- calculate total monthly precipitation
-
-Must be joined together by date.
+[delete this line and enter your own text here]
 
 ## Project roles
 
 **Natural history/framing director:**
 
-<<<<<<< HEAD
 Kselsey Hammond
-=======
-Kelsey Hammond
-
->>>>>>> d52cc41d2dfcc8eacea4553a7c74e4de9dcad8fb
 **Stats and visualization director**
-
 Nina Cutner
 
 **GitHub/code director**
@@ -104,24 +83,23 @@ Sofia Favela
 
 **Group members completing elective:**
 
-Kelsey Hammond, Sofia Favela, Nina Cutner
+[delete this line and enter your own text here]
 
 **Elective idea:**
 
-Create a physical collage using different materials (photos, magazine cut-outs,
-feathers, etc) representing waterfowl at NCOS and the effects of precipitation
+[delete this line and enter your own text here]
 
 **Elective timeline (what you will have completed each week):**
 
-Week 7: Gather materials and take photographs at NCOS
+Week 7: enter your own text here
 
-Week 8 (timeline check in): Continue to gather materials for collage.
+Week 8 (timeline check in): enter your own text here
 
-Week 9: Have rough draft/outline completed.
+Week 9: enter your own text here
 
-Week 10: Assemble collage, must be done by end of week 10.
+Week 10: enter your own text here
 
-Finals week: Submit elective.
+Finals week: enter your own text here
 
 
 
