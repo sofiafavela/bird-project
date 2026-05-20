@@ -264,7 +264,7 @@ ggsave(
 ggplot(data = bird_weather_monthly,
        mapping = aes(x = lagged_prcp,
                      y = total_abundance,
-                     color = month_num)) +
+                     color = month)) +
   geom_point(alpha = 0.8, size = 4) +
   scale_color_viridis_c(
     name = "Month",
