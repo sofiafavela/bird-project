@@ -99,8 +99,8 @@ Week 9: enter your own text here
 
 Week 10: enter your own text here
 
-Finals week: enter your own text here
 
+Finals week: Submit elective.    
 
 
 
