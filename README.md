@@ -74,25 +74,39 @@ Relationship between previous month's precipitation and total monthly waterfowl 
 
 **Potential figure 4**
 
-Seasonal comparing abundance and precipitation trends 
+Faceted seasonal line plots comparing average seasonal precipitation and average seasonal waterfowl abundance across all study years.
+
 ![Seasonal abundance and precipitation trends](figures/seasonal-abundance-trends.png)
 
 ## Data cleaning/wrangling/summarizing plan
 
-- Clean column names using `janitor::clean_names()`
-- Filter bird data to only include waterfowl observations
-- Remove repeat observations and incomplete records
-- Convert dates using `lubridate`
-- Aggregate bird abundance by month, season, and year
-- Join precipitation and bird data sets by date
-- Create summarized data sets for seasonal and long-term trend analysis
-- Create lagged precipitation variables to compare delayed ecological responses
+### Bird data (`birds.csv`)
+
+- Convert observation dates using `lubridate`
+- Filter data to only include observations classified as `"Waterfowl"`
+- Remove repeat observations
+- Filter observations to water years 2020–2025
+- Aggregate abundance counts by month and species
+- Create summarized monthly and seasonal abundance data sets
+
+### Weather data (`NOAA_daily_summaries.csv`)
+
+- Convert weather observation dates using `lubridate`
+- Filter observations to water years 2020–2025
+- Calculate total monthly precipitation values
+- Create seasonal precipitation summaries
+
+### Combined analysis
+
+- Join summarized precipitation and abundance data by month
+- Create lagged precipitation variables to compare previous-month precipitation with current-month bird abundance
+- Create seasonal summaries to compare long-term seasonal trends in abundance and precipitation
 
 ## Project roles
 
 **Natural history/framing director:**
 
-Kselsey Hammond
+Kelsey Hammond
 
 **Stats and visualization director**
 
@@ -122,9 +136,14 @@ Week 9: enter your own text here
 
 Week 10: enter your own text here
 
+<<<<<<< HEAD
 Finals week: Submit elective.    
 
 
+=======
+
+Finals week: Submit elective.    
+>>>>>>> 463d009007619117d0aae3a82dd7cd96e456986a
 
 
 
