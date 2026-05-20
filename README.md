@@ -117,7 +117,7 @@ Week 9: Have rough draft/outline completed.
 
 Week 10: Assemble collage, must be done by end of week 10.
 
-Finals week: Submit elective.   
+Finals week: Submit elective.    
 
 
 
