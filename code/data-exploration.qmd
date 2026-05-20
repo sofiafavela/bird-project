@@ -255,29 +255,33 @@ ggsave(
 ## Figure 3: Lagged Precipation vs Water
 
 ```{r}
-#| label: figure-3-relationship
-#| fig-width: 7
-#| fig-height: 5
-
 ggplot(data = bird_weather_monthly,
-       
-       # x-axis = previous month's precipitation
-       # y-axis = current month's abundance
        mapping = aes(x = lagged_prcp,
-                     y = total_abundance)) +
-  
-  # create scatterplot
-  geom_point() +
-  
-  # add linear trend line
-  geom_smooth(method = "lm",
-              se = FALSE) +
-  
-  # add plot labels
+                     y = total_abundance,
+                     color = month_num)) +
+  geom_point(alpha = 0.8, size = 4) +
+  scale_color_viridis_c(
+    name = "Month",
+    option = "turbo",
+    breaks = 1:12,
+    labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+  ) +
   labs(
     title = "Relationship Between Precipitation and Waterfowl Abundance",
-    x = "Previous month's precipitation",
-    y = "Total monthly waterfowl abundance"
+    x = "Previous month's precipitation (mm)",
+    y = "Total monthly waterfowl abundance (individuals)",
+    caption = "Each point represents one month's waterfowl abundance plotted against the previous month's precipitation"
+  ) +
+  theme_classic(base_family = "Georgia") +
+  theme(
+    legend.key.height = unit(1.5, "cm"),
+    legend.text = element_text(size = 11, family = "Georgia"),
+    legend.title = element_text(size = 12, face = "bold", family = "Georgia"),
+    plot.title = element_text(size = 14, face = "bold", family = "Georgia"),
+    plot.caption = element_text(size = 9, color = "gray50", family = "Georgia"),
+    axis.title = element_text(size = 11, family = "Georgia"),
+    axis.text = element_text(size = 10, family = "Georgia")
   )
 # saving figure 3 to figures folder
 ggsave(
