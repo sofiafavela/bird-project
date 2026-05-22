@@ -72,12 +72,6 @@ Relationship between previous month's precipitation and total monthly waterfowl 
 
 ![Precipitation abundance relationship](figures/precipitation-abundance.png)
 
-**Potential figure 4**
-
-Faceted seasonal line plots comparing average seasonal precipitation and average seasonal waterfowl abundance across all study years.
-
-![Seasonal abundance and precipitation trends](figures/seasonal-abundance-trends.png)
-
 ## Data cleaning/wrangling/summarizing plan
 
 ### Bird data (`birds.csv`)
@@ -134,7 +128,7 @@ Week 8 (timeline check in): Create a rough draft sketch of interpretive sign. Be
 
 Week 9: Begin assembling pictures, figures, and layout in Canva.
 
-Week 10: Finalize visualizations in order to create a story for the interpretive sign (i.e. when is the best time of year to view waterfowl). Assemble entire interpretive sign and complete final edits for submission.
+Week 10: Finalize visualizations in order to create a story for the interpretive sign (i.e. when is the best time of year to view waterfowl). Assmeble entire interpretive sign and complete final edits for submission.
 
 Finals week: Submit elective.    
 

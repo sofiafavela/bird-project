@@ -244,12 +244,7 @@ ggplot(data = monthly_waterfowl,
     y = "Monthly abundance",
     fill = "Species"
   )
-# saving figure 2 to figures folder
-ggsave(
-  filename = here("figures", "waterfowl-abundance.png"),
-  width = 10,
-  height = 6
-)
+
 ```
 
 ## Figure 3: Lagged Precipation vs Water
