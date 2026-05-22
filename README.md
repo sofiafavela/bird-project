@@ -39,7 +39,7 @@ The Geese
 
 - What are the effects of precipitation on bird abundance?
 - How does precipitation influence waterfowl abundance through time at NCOS?
-- Are there seasonal patterns between precipitation and waterfowl abundance?.
+- Are there seasonal patterns between precipitation and waterfowl abundance?
 
 **Response variable(s)**
 
