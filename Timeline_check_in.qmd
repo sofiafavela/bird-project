@@ -1,0 +1,10 @@
+---
+title: "Timeline check in"
+author: "Nina, Kelsey, Sofia"
+format: pdf
+date: May 22, 2026
+execute:
+  message: false
+  warning: false
+---
+
