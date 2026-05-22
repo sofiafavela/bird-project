@@ -2,3 +2,564 @@
 title: "Refined code and visualizations"
 format: pdf
 ---
+
+# Packages
+
+```{r}
+#| label: packages
+
+# data wrangling and visualization
+library(tidyverse)
+
+# allows file paths to work across computers
+library(here)
+
+# formatting axis labels
+library(scales)
+
+# working with dates
+library(lubridate)
+```
+
+# Data
+
+```{r}
+#| label: data
+
+# read in bird survey data
+birds <- read.csv(here("data", "birds.csv"))
+
+# read in NOAA weather data
+weather <- read.csv(here("data", "NOAA_daily_summaries.csv"))
+```
+
+# Cleaning Data
+
+```{r}
+#| label: cleaning-birds
+
+birds_clean <- birds |> 
+  # convert observation date to date format
+  mutate(
+    observation_date = ymd(observation_date),
+    
+    # create monthly grouping variable
+    month = floor_date(observation_date,
+                       unit = "month")
+  ) |> 
+  
+  # filter to only include waterfowl observations
+  filter(
+    e_bird_group == "Waterfowl",
+    
+    # remove repeat observations
+    repeat_observation == "No",
+    
+    # keep observations within study period
+    observation_date > ymd("2019-09-30"),
+    observation_date < ymd("2025-10-01")
+  )
+```
+
+```{r}
+#| label: cleaning-weather
+
+weather_clean <- weather |> 
+  
+  # convert date column to date format
+  mutate(
+    DATE = ymd(DATE),
+    
+    # create monthly grouping variable
+    month = floor_date(DATE,
+                       unit = "month")
+  ) |> 
+  
+  # filter to study period
+  filter(
+    DATE > ymd("2019-09-30"),
+    DATE < ymd("2025-10-01")
+  )
+```
+
+```{r}
+#| label: joining-data-frames
+
+# join bird and weather data by exact date
+bird_weather <- full_join(
+  x = birds_clean,
+  y = weather_clean,
+  
+  # match bird observation dates to weather dates
+  by = c("observation_date" = "DATE")
+) |> 
+  
+  # keep only variables of interest
+  select(
+    observation_date,
+    season,
+    species,
+    count,
+    PRCP
+  )
+```
+
+# Summaries
+
+```{r}
+#| label: monthly-precipitation
+
+# calculate total monthly precipitation
+monthly_precip <- weather_clean |> 
+  
+  # group observations by month
+  group_by(month) |> 
+  
+  # sum precipitation within each month
+  summarize(
+    monthly_prcp = sum(PRCP, na.rm = TRUE),
+    
+    # remove grouping after summarizing
+    .groups = "drop"
+  )
+```
+
+```{r}
+#| label: monthly-waterfowl-abundance
+
+# calculate monthly abundance by species
+monthly_waterfowl <- birds_clean |> 
+  
+  # group by month and species
+  group_by(month, species) |> 
+  
+  # sum bird counts within each month
+  summarize(
+    abundance = sum(count, na.rm = TRUE),
+    
+    # remove grouping after summarizing
+    .groups = "drop"
+  )
+```
+
+```{r}
+#| label: total-monthly-waterfowl
+
+# calculate total monthly waterfowl abundance
+total_monthly_waterfowl <- birds_clean |> 
+  
+  # group by month
+  group_by(month) |> 
+  
+  # sum all bird counts within each month
+  summarize(
+    total_abundance = sum(count, na.rm = TRUE),
+    
+    # remove grouping after summarizing
+    .groups = "drop"
+  )
+```
+
+# Joining data
+
+```{r}
+#| label: joining-monthly-data
+
+# join monthly bird abundance with monthly precipitation
+bird_weather_monthly <- total_monthly_waterfowl |> 
+  
+  # join by month
+  left_join(monthly_precip,
+            by = "month") |> 
+  
+  # arrange chronologically
+  arrange(month) |> 
+  
+  # create lagged precipitation variable
+  mutate(
+    
+    # previous month's precipitation
+    lagged_prcp = lag(monthly_prcp)
+  )
+```
+
+# trying visualizations
+
+## Figure 1: Monthly Precipitation Through Time
+
+```{r}
+#| label: figure-1-precipitation
+#| fig-width: 10
+#| fig-height: 5
+
+ggplot(data = monthly_precip,
+       mapping = aes(x = month,
+                     y = monthly_prcp)) +
+  
+  # Line with blue color + slight area fill beneath for depth
+  geom_area(fill = "#4682B4", alpha = 0.25) +
+  geom_line(color = "#7EC8E3", linewidth = 0.8) +
+  
+  scale_x_date(
+    date_breaks = "1 year",
+    date_labels = "%Y",
+    expand = c(0, 0)
+  ) +
+  
+  scale_y_continuous(
+    expand = c(0, 0)
+  ) +
+  
+  labs(
+    title = "Monthly Precipitation Through Time",
+    x = "Date",
+    y = "Monthly Precipitation (in)"
+  ) +
+  
+  theme_minimal(base_size = 13) +
+  theme(
+    # Dark background — matches waterfowl theme
+    plot.background  = element_rect(fill = "#1C2B2D", color = NA),
+    panel.background = element_rect(fill = "#243336", color = NA),
+    
+    # Subtle grid
+    panel.grid.major = element_line(color = "#3A4F52", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    
+    # Title
+    plot.title = element_text(
+      color  = "#F0EAD6",
+      size   = 20,
+      face   = "bold",
+      margin = margin(b = 12),
+      hjust  = 0
+    ),
+    
+    # Axis styling
+    axis.text  = element_text(color = "#B8C9C2", size = 10),
+    axis.title = element_text(color = "#D4C9A8", size = 11),
+    axis.ticks = element_line(color = "#3A4F52"),
+    
+    plot.margin = margin(16, 20, 12, 16)
+  )
+
+# Save figure to figures folder
+ggsave(
+  filename = here("figures", "refined-precipitation.png"),
+  width = 10,
+  height = 5,
+  bg = "#1C2B2D"
+)
+
+```
+
+
+## Figure 2: Waterfowl Abundance Through Time
+
+```{r}
+#| label: figure-2-waterfowl
+#| fig-width: 11
+#| fig-height: 7
+
+# Nature-like palette
+waterfowl_colors <- c(
+  "American Wigeon"             = "#C1440E",
+  "Bufflehead"                  = "#E8A838",
+  "Canada Goose"                = "#6B8E23",
+  "Cinnamon Teal"               = "#A0522D",
+  "Gadwall"                     = "#8FBC8F",
+  "Greater White-fronted Goose" = "#D2B48C",
+  "Green-winged Teal"           = "#2E8B57",
+  "Hooded Merganser"            = "#20B2AA",
+  "Mallard"                     = "#4682B4",
+  "Northern Pintail"            = "#5F9EA0",
+  "Northern Shoveler"           = "#3CB371",
+  "Redhead"                     = "#8B1A1A",
+  "Ring-necked Duck"            = "#6A5ACD",
+  "Ross's Goose"                = "#F4E4B8",
+  "Ruddy Duck"                  = "#CD853F",
+  "Snow Goose"                  = "#B0C4DE"   
+)
+
+# Reorder species so similar colors aren't adjacent in the stack
+monthly_waterfowl <- monthly_waterfowl |> 
+  mutate(species = factor(species, levels = c(
+    "Snow Goose", "Ross's Goose", "Ring-necked Duck", "Redhead",
+    "Ruddy Duck", "American Wigeon", "Cinnamon Teal", "Northern Pintail",
+    "Mallard", "Northern Shoveler", "Bufflehead", "Hooded Merganser",
+    "Green-winged Teal", "Gadwall", "Greater White-fronted Goose", "Canada Goose"
+  )))
+
+ggplot(data = monthly_waterfowl,
+       mapping = aes(x = month,
+                     y = abundance,
+                     fill = species)) +
+  
+  # Including border lines between layers to reduce muddiness
+  geom_area(color = "#1C2B2D", linewidth = 0.15, alpha = 0.92) +
+  
+  scale_fill_manual(values = waterfowl_colors) +
+  
+  scale_x_date(
+    date_breaks = "1 year",
+    date_labels = "%Y",
+    expand = c(0, 0)
+  ) +
+  
+  scale_y_continuous(
+    expand = c(0, 0)
+  ) +
+  
+  labs(
+    title = "Monthly Waterfowl Abundance Through Time",
+    x = "Date",
+    y = "Monthly Abundance",
+    fill = NULL
+  ) +
+  
+  theme_minimal(base_size = 13) +
+  theme(
+    # Dark background
+    plot.background  = element_rect(fill = "#1C2B2D", color = NA),
+    panel.background = element_rect(fill = "#243336", color = NA),
+    
+    # Subtle grid
+    panel.grid.major = element_line(color = "#3A4F52", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    
+    # Title
+    plot.title = element_text(
+      color  = "#F0EAD6",
+      size   = 20,
+      face   = "bold",
+      margin = margin(b = 12),
+      hjust  = 0
+    ),
+    
+    # Axis styling
+    axis.text  = element_text(color = "#B8C9C2", size = 10),
+    axis.title = element_text(color = "#D4C9A8", size = 11),
+    axis.ticks = element_line(color = "#3A4F52"),
+    
+    # Legend
+    legend.position   = "right",
+    legend.background = element_rect(fill = "#1C2B2D", color = NA),
+    legend.key        = element_rect(fill = NA, color = NA),
+    legend.text       = element_text(color = "#F0EAD6", size = 8.5),
+    legend.key.size   = unit(0.45, "cm"),
+    legend.spacing.y  = unit(0.1, "cm"),
+    
+    # Margins
+    plot.margin = margin(16, 20, 12, 16)
+  )
+
+# Save figure to figures folder
+ggsave(
+  filename = here("figures", "refined-waterfowl-abundance.png"),
+  width = 11,
+  height = 7,
+  bg = "#1C2B2D"
+)
+```
+
+## Figure 3: Lagged Precipation vs Water
+
+```{r}
+#| label: figure-3-lagged-precip
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data = bird_weather_monthly,
+       mapping = aes(x = lagged_prcp,
+                     y = total_abundance,
+                     color = month)) +
+  
+  geom_point(alpha = 0.85, size = 4) +
+  
+  scale_color_viridis_c(
+    name = "Month",
+    option = "turbo",
+    breaks = 1:12,
+    labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+  ) +
+  
+  labs(
+    title = "Relationship Between Precipitation and Waterfowl Abundance",
+    x = "Previous Month's Precipitation (mm)",
+    y = "Total Monthly Waterfowl Abundance (individuals)",
+    caption = "Each point represents one month's waterfowl abundance plotted against the previous month's precipitation"
+  ) +
+  
+  theme_minimal(base_size = 13) +
+  theme(
+    # Dark background
+    plot.background  = element_rect(fill = "#1C2B2D", color = NA),
+    panel.background = element_rect(fill = "#243336", color = NA),
+    
+    # Subtle grid
+    panel.grid.major = element_line(color = "#3A4F52", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    
+    # Title
+    plot.title = element_text(
+      color  = "#F0EAD6",
+      size   = 20,
+      face   = "bold",
+      margin = margin(b = 12),
+      hjust  = 0
+    ),
+    
+    # Caption
+    plot.caption = element_text(
+      color  = "#7A9A95",
+      size   = 8.5,
+      hjust  = 0,
+      margin = margin(t = 8)
+    ),
+    
+    # Axis styling
+    axis.text  = element_text(color = "#B8C9C2", size = 10),
+    axis.title = element_text(color = "#D4C9A8", size = 11),
+    axis.ticks = element_line(color = "#3A4F52"),
+    
+    # Legend styling
+    legend.background  = element_rect(fill = "#1C2B2D", color = NA),
+    legend.key         = element_rect(fill = NA, color = NA),
+    legend.text        = element_text(color = "#F0EAD6", size = 9),
+    legend.title       = element_text(color = "#D4C9A8", size = 10, face = "bold"),
+    legend.key.height  = unit(1.2, "cm"),
+    
+    plot.margin = margin(16, 20, 12, 16)
+  )
+
+# Save figure to figures folder
+ggsave(
+  filename = here("figures", "refined-lagged-precip-abundance.png"),
+  width = 10,
+  height = 6,
+  bg = "#1C2B2D"
+)
+```
+
+## Potential figure 4 — average abundance across seasons with scaled precipitation line
+
+```{r}
+#|: label: seasonal-summary
+
+seasonal_summary <- bird_weather_monthly |> 
+  
+  # mutating data to create seasons from months
+  mutate(
+    season = case_when(
+      month(month) %in% c(12, 1, 2) ~ "Winter",
+      month(month) %in% c(3, 4, 5) ~ "Spring",
+      month(month) %in% c(6, 7, 8) ~ "Summer",
+      TRUE ~ "Fall"
+    ),
+    season = factor(season, levels = c("Winter", "Spring", "Summer", "Fall"))
+  ) |> 
+  
+  # creating average values across seasons and years
+  group_by(season) |> 
+  summarize(
+    avg_abundance = mean(total_abundance, na.rm = TRUE),
+    avg_precip    = mean(monthly_prcp, na.rm = TRUE),
+    .groups = "drop"
+  ) |> 
+  
+  # editing column names
+  pivot_longer(
+    cols = c(avg_abundance, avg_precip),
+    names_to = "variable",
+    values_to = "average_value"
+  ) |> 
+  
+  # mutating variable names
+  mutate(
+    variable = case_when(
+      variable == "avg_abundance" ~ "Average Waterfowl Abundance",
+      variable == "avg_precip"   ~ "Average Precipitation"
+    )
+  )
+  
+```
+
+```{r}
+#| label: figure-4-seasonal-abundance-precip
+#| fig-width: 9
+#| fig-height: 7
+
+# Assign each panel its own accent color
+panel_colors <- c(
+  "Average Waterfowl Abundance" = "#7EC8E3",  # sky blue — water/birds
+  "Average Precipitation"       = "#6B8E23"   # olive — rainfall/nature
+)
+
+ggplot(data = seasonal_summary,
+       mapping = aes(x = season,
+                     y = average_value,
+                     group = variable,
+                     color = variable)) +
+  
+  # shaded area beneath each line for depth
+  geom_area(aes(fill = variable), alpha = 0.15) +
+  
+  geom_line(linewidth = 1.2) +
+  
+  geom_point(size = 4) +
+  
+  scale_color_manual(values = panel_colors, guide = "none") +
+  scale_fill_manual(values = panel_colors, guide = "none") +
+  
+  facet_wrap(~ variable,
+             scales = "free_y",
+             ncol = 1) +
+  
+  labs(
+    title = "Seasonal Patterns in Waterfowl Abundance and Precipitation",
+    x = "Season",
+    y = "Average Monthly Value"
+  ) +
+  
+  theme_minimal(base_size = 13) +
+  theme(
+    # Dark background
+    plot.background  = element_rect(fill = "#1C2B2D", color = NA),
+    panel.background = element_rect(fill = "#243336", color = NA),
+    
+    # Subtle grid
+    panel.grid.major = element_line(color = "#3A4F52", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    
+    # Title
+    plot.title = element_text(
+      color  = "#F0EAD6",
+      size   = 18,
+      face   = "bold",
+      margin = margin(b = 12),
+      hjust  = 0
+    ),
+    
+    # Facet strip styling
+    strip.background = element_rect(fill = "#2E4A4F", color = NA),
+    strip.text       = element_text(color = "#F0EAD6", size = 11, face = "bold"),
+    
+    # Axis styling
+    axis.text  = element_text(color = "#B8C9C2", size = 10),
+    axis.title = element_text(color = "#D4C9A8", size = 11),
+    axis.ticks = element_line(color = "#3A4F52"),
+    
+    # Space between panels
+    panel.spacing = unit(1, "cm"),
+    
+    plot.margin = margin(16, 20, 12, 16)
+  )
+
+ggsave(
+  filename = here("figures", "refined-seasonal-abundance-precip.png"),
+  width = 9,
+  height = 7,
+  bg = "#1C2B2D"
+)
+```
