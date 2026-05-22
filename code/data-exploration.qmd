@@ -298,7 +298,7 @@ ggsave(
 
 seasonal_summary <- bird_weather_monthly |> 
   
-  # creating season variable from month
+  # create season variable from month
   mutate(
     season = case_when(
       month(month) %in% c(12, 1, 2) ~ "Winter",
@@ -306,7 +306,8 @@ seasonal_summary <- bird_weather_monthly |>
       month(month) %in% c(6, 7, 8) ~ "Summer",
       TRUE ~ "Fall"
     ),
-  # order seasons logically
+    
+    # order seasons logically
     season = factor(season,
                     levels = c("Winter", "Spring", "Summer", "Fall"))
   ) |> 
@@ -322,6 +323,21 @@ seasonal_summary <- bird_weather_monthly |>
     avg_precip = mean(monthly_prcp, na.rm = TRUE),
     
     .groups = "drop"
+  ) |> 
+  
+  # convert abundance and precipitation into one column for faceting
+  pivot_longer(
+    cols = c(avg_abundance, avg_precip),
+    names_to = "variable",
+    values_to = "average_value"
+  ) |> 
+  
+  # rename variables for clearer facet labels
+  mutate(
+    variable = case_when(
+      variable == "avg_abundance" ~ "Average Waterfowl Abundance",
+      variable == "avg_precip" ~ "Average Precipitation"
+    )
   )
   
 ```
@@ -329,40 +345,29 @@ seasonal_summary <- bird_weather_monthly |>
 ```{r}
 #| label: figure-4-seasonal-abundance-precip
 #| fig-width: 8
-#| fig-height: 5
-
-# scaling factor so precipitation can be layered on abundance axis
-precip_scale <- max(seasonal_summary$avg_abundance, na.rm = TRUE) /
-  max(seasonal_summary$avg_precip, na.rm = TRUE)
+#| fig-height: 6
 
 ggplot(data = seasonal_summary,
-       mapping = aes(x = season)) +
+       mapping = aes(x = season,
+                     y = average_value,
+                     group = variable)) +
   
-  # bar chart for average abundance
-  geom_col(mapping = aes(y = avg_abundance)) +
+  # create line plot
+  geom_line(linewidth = 1) +
   
-  # precipitation line scaled to abundance axis
-  geom_line(mapping = aes(y = avg_precip * precip_scale,
-                          group = 1),
-            linewidth = 1) +
+  # add points at each season
+  geom_point(size = 3) +
   
-  # points on precipitation line
-  geom_point(mapping = aes(y = avg_precip * precip_scale),
-             size = 3) +
-  
-  # add primary and secondary y-axis
-  scale_y_continuous(
-    name = "Average monthly waterfowl abundance",
-    sec.axis = sec_axis(
-      trans = ~ . / precip_scale,
-      name = "Average monthly precipitation"
-    )
-  ) +
+  # separate abundance and precipitation into different panels
+  facet_wrap(~ variable,
+           scales = "free_y",
+           ncol = 1) +
   
   # add plot labels
   labs(
-    title = "Average Waterfowl Abundance and Precipitation by Season",
-    x = "Season"
+    title = "Seasonal Patterns in Waterfowl Abundance and Precipitation",
+    x = "Season",
+    y = "Average monthly value"
   )
 ```
 

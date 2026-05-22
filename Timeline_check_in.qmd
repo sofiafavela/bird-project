@@ -1,0 +1,26 @@
+---
+title: "Timeline check in"
+author: "Nina, Kelsey, Sofia"
+format: pdf
+date: May 22, 2026
+execute:
+  message: false
+  warning: false
+---
+
+# Ideas for analysis and background
+
+- [insert ideas for analysis to answer questions and some preliminary code to run those analyses]
+- [include some citations (not all)]
+
+
+# Visualizations directly relevant to answering questions
+
+
+# Other exploratory visualizations
+
+
+# Plan for elective
+
+- [insert some description/images of drafts]
+- [insert plan for making progress in the next two weeks]

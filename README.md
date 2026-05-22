@@ -25,54 +25,91 @@ Note:
 
 ## Group members
 
-Sofia favela,
+Sofia Favela, Nina Cutner, Kelsey Hammond
+
 ## Group name (optional): 
+
 The Geese 
 
 ## Topic information and question
 
-**Topic: Bird Abundnace and Precipitation 
+**Topic: Bird abundance and precipitation patterns at North Campus Open Space (NCOS)
 
 **Question(s):**  
 
- What are the effects of precipitation of bird abundance? .
+- What are the effects of precipitation on bird abundance?
+- How does precipitation influence waterfowl abundance through time at NCOS?
+- Are there seasonal patterns between precipitation and waterfowl abundance?.
 
 **Response variable(s)**
 
-[delete this line and enter your bullet point list here]
+- Waterfowl abundance
+- Species abundance counts
+- Seasonal abundance trends
 
 ## Datasets
 
-bird_abundance_waterfowl
+- birds.csv
+- NOAA_daily_summaries.csv
 
 ## Figures
 
 **Potential figure 1:**
 
-[delete this line and enter your figure here]
+Monthly precipitation through time.
+
+![Monthly precipitation](figures/monthly-precipitation.png)
 
 **Potential figure 2:**
 
-[delete this line and enter your figure here; if you don't have one, delete the entire section]
+Monthly waterfowl abundance through time by species.
+
+![Waterfowl abundance](figures/waterfowl-abundance.png)
 
 **Potential figure 3:**
 
-[delete this line and enter your figure here; if you don't have one, delete the entire section]
+Relationship between previous month's precipitation and total monthly waterfowl abundance.
+
+![Precipitation abundance relationship](figures/precipitation-abundance.png)
 
 **Potential figure 4**
 
-[delete this line and enter your figure here; if you don't have one, delete the entire section]
+Faceted seasonal line plots comparing average seasonal precipitation and average seasonal waterfowl abundance across all study years.
+
+![Seasonal abundance and precipitation trends](figures/seasonal-abundance-trends.png)
 
 ## Data cleaning/wrangling/summarizing plan
 
-[delete this line and enter your own text here]
+### Bird data (`birds.csv`)
+
+- Convert observation dates using `lubridate`
+- Filter data to only include observations classified as `"Waterfowl"`
+- Remove repeat observations
+- Filter observations to water years 2020–2025
+- Aggregate abundance counts by month and species
+- Create summarized monthly and seasonal abundance data sets
+
+### Weather data (`NOAA_daily_summaries.csv`)
+
+- Convert weather observation dates using `lubridate`
+- Filter observations to water years 2020–2025
+- Calculate total monthly precipitation values
+- Create seasonal precipitation summaries
+
+### Combined analysis
+
+- Join summarized precipitation and abundance data by month
+- Create lagged precipitation variables to compare previous-month precipitation with current-month bird abundance
+- Create seasonal summaries to compare long-term seasonal trends in abundance and precipitation
 
 ## Project roles
 
 **Natural history/framing director:**
 
-Kselsey Hammond
+Kelsey Hammond
+
 **Stats and visualization director**
+
 Nina Cutner
 
 **GitHub/code director**
@@ -83,11 +120,11 @@ Sofia Favela
 
 **Group members completing elective:**
 
-[delete this line and enter your own text here]
+Kelsey, Nina, and Sofia
 
 **Elective idea:**
 
-[delete this line and enter your own text here]
+Create a digital interpretive trail sign/informational pamphlet on Canva to display to potential trail visitors when the best time of year would be to see waterfowl.
 
 **Elective timeline (what you will have completed each week):**
 
@@ -99,8 +136,14 @@ Week 9: enter your own text here
 
 Week 10: enter your own text here
 
+<<<<<<< HEAD
+Finals week: Submit elective.    
+
+
+=======
 
 Finals week: Submit elective.    
+>>>>>>> 463d009007619117d0aae3a82dd7cd96e456986a
 
 
 
