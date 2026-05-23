@@ -219,4 +219,6 @@ We want to create a tangible brochure to be available along the NCOS trail. It w
 - **Week 2:** Design Brochure in Canva, incorporating figures from our analysis, review and finalize for print. 
 
 ## Brochure Blueprint
+![Brochure draft sketch](figures/brochure-draft.svg)
+
 
