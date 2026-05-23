@@ -9,18 +9,43 @@ execute:
 bibliography: references.bib
 ---
 
+```{r}
+#| label: packages
+
+# data wrangling and visualization
+library(tidyverse)
+
+# allows file paths to work across computers
+library(here)
+
+# formatting axis labels
+library(scales)
+
+# working with dates
+library(lubridate)
+```
+
+```{r}
+#| label: data
+
+# read in bird survey data
+birds <- read.csv(here("data", "birds.csv"))
+
+# read in NOAA weather data
+weather <- read.csv(here("data", "NOAA_daily_summaries.csv"))
+```
+
 # Ideas for analysis and background
 
 ## Citations
 
-- Habitat quality and drought effects on breeding mallard and other waterfowl populations in California, USA:
-  - This report shows how drought impacts habitat quality which in turn impacts waterfowl population. This is relevant to our study because we are looking at how precipitation impacts waterfowl abundance. Precipitation is a factor for drought. [@kahara2021]
-- Forecasting waterfowl population dynamics under climate change – Does the spatial variation of density dependence and environmental effects matter?:
-  - This report found that due to climate change, Mallard density is predicted to decline. One of the climate variables they examine is precipitation. This is relevant to our study because we are looking at the effects of precipitation on waterfowl. Their modelling is similar to what we are retroactively looking at. [@zhao2016]
-- The effect of climate change on optimal wetlands and waterfowl management in Western Canada:
-  - This paper is relevant to our study because they are focusing on how climate change variables such a precipitation and temperature changes will affect wetland habitats. This is where waterbirds live and precipitation affects the quality of the habitat. [@withey2011]
-- Trends in abundance of wintering waterbirds relative to rainfall patterns at a central California estuary, 1972-2015:
-  - This paper finds that there is a relationship between waterbirds and rainfall. They find that there is typically a negative relationship between the two and that the relationship is stronger when looking at rainfall in the current year than in looking previous years. This is relevant to our study because we are looking at the relationship between waterfowl abundance and precipitation as well. [@stenzel2011]
+- **Habitat quality and drought effects on breeding mallard and other waterfowl populations in California, USA** [@kahara2021]: This report shows how drought impacts habitat quality which in turn impacts waterfowl population. This is relevant to our study because we are looking at how precipitation impacts waterfowl abundance. Precipitation is a factor for drought.
+
+- **Forecasting waterfowl population dynamics under climate change – Does the spatial variation of density dependence and environmental effects matter?** [@zhao2016]: This report found that due to climate change, Mallard density is predicted to decline. One of the climate variables they examine is precipitation. This is relevant to our study because we are looking at the effects of precipitation on waterfowl. Their modelling is similar to what we are retroactively looking at.
+
+- **The effect of climate change on optimal wetlands and waterfowl management in Western Canada** [@withey2011]: This paper is relevant to our study because they are focusing on how climate change variables such as precipitation and temperature changes will affect wetland habitats. This is where waterbirds live and precipitation affects the quality of the habitat.
+
+- **Trends in abundance of wintering waterbirds relative to rainfall patterns at a central California estuary, 1972-2015** [@stenzel2011]: This paper finds that there is a relationship between waterbirds and rainfall. They find that there is typically a negative relationship between the two, and that the relationship is stronger when looking at rainfall in the current year than in previous years. This is relevant to our study because we are looking at the relationship between waterfowl abundance and precipitation as well.
 
 ## Preliminary code for analyses
 # Cleaning Data
@@ -175,12 +200,13 @@ bird_weather_monthly <- total_monthly_waterfowl |>
 
 # Visualizations directly relevant to answering questions
 
-<<<<<<< HEAD
 # Other exploratory visualizations
 
-=======
+
 ## Figure 1: Monthly precipitation through time
 ![Monthly precipitation](figures/refined-precipitation.png)
+
+
 Figure 1 depicts monthly precipitation trends at NCOS from water years 2020-2025. This figure lays out context for a potential relationship between precipitation and waterfowl abundance to be compared.
 
 ## Figure 2: Monthly waterfowl abundance through time by species
@@ -197,10 +223,10 @@ Figure 3 depicts the relationship between total monthly waterfowl abundance and 
 ![Seasonal trends of waterfowl and precipitation](figures/refined-seasonal-abundance-precip.png)
 Figure 4 uses a facet graph to compare average seasonal precipitation and waterfowl abundance across water years 2020-2025. While this graph may at first contradict the previous figures' notions, showing similar trends between the two variables across seasons, we can assume similar seasonal trends for waterfowl and precipitation, although having no direct effect on each other. This figure can be used in our elective interpretive trail sign to show potential trail visitors when the best time of the year to see waterfowl are (it may also just happen to be the wettest times of the year).
 
->>>>>>> refs/remotes/origin/main
+
 # Plan for elective
 
-- \[insert some description/images of drafts\]
+
 ## Conecpt
 
 We want to create a tangible brochure to be available along the NCOS trail. It will serve as a visitor's guide to waterfowl spotting, featuring the most prevalent of our 19 waterfowl species observed in the dataset.
@@ -219,6 +245,6 @@ We want to create a tangible brochure to be available along the NCOS trail. It w
 - **Week 2:** Design Brochure in Canva, incorporating figures from our analysis, review and finalize for print. 
 
 ## Brochure Blueprint
-![Brochure draft sketch](figures/brochure-draft.svg)
+![Brochure draft sketch](figures/brochure-draft.pdf)
 
 
