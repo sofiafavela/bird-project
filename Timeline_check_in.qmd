@@ -6,21 +6,30 @@ date: May 22, 2026
 execute:
   message: false
   warning: false
+bibliography: references.bib
 ---
 
 # Ideas for analysis and background
 
-- [insert ideas for analysis to answer questions and some preliminary code to run those analyses]
-- [include some citations (not all)]
+## Citations
+
+- Habitat quality and drought effects on breeding mallard and other waterfowl populations in California, USA:
+  - This report shows how drought impacts habitat quality which in turn impacts waterfowl population. This is relevant to our study because we are looking at how precipitation impacts waterfowl abundance. Precipitation is a factor for drought. [@kahara2021]
+- Forecasting waterfowl population dynamics under climate change – Does the spatial variation of density dependence and environmental effects matter?:
+  - This report found that due to climate change, Mallard density is predicted to decline. One of the climate variables they examine is precipitation. This is relevant to our study because we are looking at the effects of precipitation on waterfowl. Their modelling is similar to what we are retroactively looking at. [@zhao2016]
+- The effect of climate change on optimal wetlands and waterfowl management in Western Canada:
+  - This paper is relevant to our study because they are focusing on how climate change variables such a precipitation and temperature changes will affect wetland habitats. This is where waterbirds live and precipitation affects the quality of the habitat. [@withey2011]
+- Trends in abundance of wintering waterbirds relative to rainfall patterns at a central California estuary, 1972-2015:
+  - This paper finds that there is a relationship between waterbirds and rainfall. They find that there is typically a negative relationship between the two and that the relationship is stronger when looking at rainfall in the current year than in looking previous years. This is relevant to our study because we are looking at the relationship between waterfowl abundance and precipitation as well. [@stenzel2011]
+
+## Preliminary code for analyses
 
 
 # Visualizations directly relevant to answering questions
 
-
 # Other exploratory visualizations
-
 
 # Plan for elective
 
-- [insert some description/images of drafts]
-- [insert plan for making progress in the next two weeks]
+- \[insert some description/images of drafts\]
+- \[insert plan for making progress in the next two weeks\]
