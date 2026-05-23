@@ -39,7 +39,7 @@ The Geese
 
 - What are the effects of precipitation on bird abundance?
 - How does precipitation influence waterfowl abundance through time at NCOS?
-- Are there seasonal patterns between precipitation and waterfowl abundance?.
+- Are there seasonal patterns between precipitation and waterfowl abundance?
 
 **Response variable(s)**
 
@@ -71,12 +71,6 @@ Monthly waterfowl abundance through time by species.
 Relationship between previous month's precipitation and total monthly waterfowl abundance.
 
 ![Precipitation abundance relationship](figures/precipitation-abundance.png)
-
-**Potential figure 4**
-
-Faceted seasonal line plots comparing average seasonal precipitation and average seasonal waterfowl abundance across all study years.
-
-![Seasonal abundance and precipitation trends](figures/seasonal-abundance-trends.png)
 
 ## Data cleaning/wrangling/summarizing plan
 
@@ -128,22 +122,19 @@ Create a digital interpretive trail sign/informational pamphlet on Canva to disp
 
 **Elective timeline (what you will have completed each week):**
 
-Week 7: enter your own text here
+Week 7: Brain storm elective and plan out idea/execution.
 
-Week 8 (timeline check in): enter your own text here
+Week 8 (timeline check in): Create a rough draft sketch of interpretive sign. Begin to gather potential pictures and sign descriptions.
 
-Week 9: enter your own text here
+Week 9: Begin assembling pictures, figures, and layout in Canva.
 
-Week 10: enter your own text here
+Week 10: Finalize visualizations in order to create a story for the interpretive sign (i.e. when is the best time of year to view waterfowl). Assmeble entire interpretive sign and complete final edits for submission.
 
-<<<<<<< HEAD
 Finals week: Submit elective.    
 
 
 =======
 
-Finals week: Submit elective.    
->>>>>>> 463d009007619117d0aae3a82dd7cd96e456986a
 
 
 

@@ -27,8 +27,29 @@ bibliography: references.bib
 
 # Visualizations directly relevant to answering questions
 
+<<<<<<< HEAD
 # Other exploratory visualizations
 
+=======
+## Figure 1: Monthly precipitation through time
+![Monthly precipitation](figures/refined-precipitation.png)
+Figure 1 depicts monthly precipitation trends at NCOS from water years 2020-2025. This figure lays out context for a potential relationship between precipitation and waterfowl abundance to be compared.
+
+## Figure 2: Monthly waterfowl abundance through time by species
+![Monthly waterfowl abundance](figures/refined-waterfowl-abundance.png)
+Figure 2 depicts monthly waterfowl abundance trends at NCOS from water years 2020-2025 across all waterfowl species. This figure also provides necessary context in exploring the potential relationship between precipitation and waterfowl abundance. We can begin to see that waterfowl abundance may have a negative relationship with precipitation, for example, 2020 was a relatively dry year, yet shows the highest waterfowl abundance, and 2024 was a relatively wet year, yet shows low waterfowl abundance.
+
+## Figure 3: Lagged precipitation vs. species abundance
+![Lagged precipitation vs waterfowl abundance](figures/refined-lagged-precip-abundance.png)
+Figure 3 depicts the relationship between total monthly waterfowl abundance and the previous months precipitation. A lagged precipitation variable was used in order to show a potential predictive effect. Overall, the figure shows little to no clear trend, allowing us to conclude that there is no prominent effect of precipitation on waterfowl abundance.
+
+# Other exploratory visualizations
+
+## Figure 4: Average seasonal trends comparing waterfowl abundance and precipitation
+![Seasonal trends of waterfowl and precipitation](figures/refined-seasonal-abundance-precip.png)
+Figure 4 uses a facet graph to compare average seasonal precipitation and waterfowl abundance across water years 2020-2025. While this graph may at first contradict the previous figures' notions, showing similar trends between the two variables across seasons, we can assume similar seasonal trends for waterfowl and precipitation, although having no direct effect on each other. This figure can be used in our elective interpretive trail sign to show potential trail visitors when the best time of the year to see waterfowl are (it may also just happen to be the wettest times of the year).
+
+>>>>>>> refs/remotes/origin/main
 # Plan for elective
 
 - \[insert some description/images of drafts\]
