@@ -201,4 +201,22 @@ Figure 4 uses a facet graph to compare average seasonal precipitation and waterf
 # Plan for elective
 
 - \[insert some description/images of drafts\]
-- \[insert plan for making progress in the next two weeks\]
+## Conecpt
+
+We want to create a tangible brochure to be available along the NCOS trail. It will serve as a visitor's guide to waterfowl spotting, featuring the most prevalent of our 19 waterfowl species observed in the dataset.
+
+## Proposed Layout
+
+- **"Species profiles:** Small illustrations or photos, a fun fact, and best time of year to spot the species based on our data
+
+- **"When to Visit" guide:** A seasonal breakdown of which species are most abundant, informed by figure 4. 
+
+- **Precipitation Note:** A fun callout illustrating which species are most active during rainy seasons, tying in our findings.
+
+## Two-Week Plan
+- **Week 1:** Finalize brochure layout and species selection, gather create illustrations of species, draft facts and relevant data.
+
+- **Week 2:** Design Brochure in Canva, incorporating figures from our analysis, review and finalize for print. 
+
+## Brochure Blueprint
+
