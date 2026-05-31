@@ -23,6 +23,9 @@ library(scales)
 
 # working with dates
 library(lubridate)
+
+# combining plots
+library(patchwork)
 ```
 
 ```{r}
@@ -37,6 +40,24 @@ weather <- read.csv(here("data", "NOAA_daily_summaries.csv"))
 
 # Ideas for analysis and background
 
+## Research Questions
+
+- What is the effect of previous month's precipitation on total monthly waterfowl abundance at NCOS?
+- How does total waterfowl abundance vary through time at NCOS?
+- Are there seasonal patterns in waterfowl abundance and precipitation at NCOS?
+
+## Relevance
+
+**Relevance to NCOS:** NCOS is a restored coastal wetland in Santa Barbara, CA. Understanding what drives waterfowl abundance at this site helps evaluate whether restoration efforts are creating suitable habitat conditions for migratory and resident waterbirds.
+
+**Relevance to other systems:** Precipitation-abundance relationships in waterfowl are relevant to other California estuaries and coastal wetlands, where water availability similarly structures habitat quality. Findings from NCOS can inform management decisions at comparable restored wetland systems throughout the region.
+
+**Relevance to understanding the organisms and physical processes:** Waterfowl are strongly tied to wetland hydrology; precipitation influences water depth, food availability, and habitat extent, all of which affect where and when birds concentrate [@kahara2021; @stenzel2011]. Understanding how rainfall patterns shape waterfowl abundance contributes to broader knowledge of how climate variability affects waterbird communities.
+
+## Planned Analysis
+
+We plan to explore the relationship between lagged monthly precipitation and total monthly waterfowl abundance using a scatter plot and linear regression. We will also compare seasonal totals of both variables to assess whether seasonal patterns align across water years 2020–2025.
+
 ## Citations
 
 - **Habitat quality and drought effects on breeding mallard and other waterfowl populations in California, USA** [@kahara2021]: This report shows how drought impacts habitat quality which in turn impacts waterfowl population. This is relevant to our study because we are looking at how precipitation impacts waterfowl abundance. Precipitation is a factor for drought.
@@ -47,29 +68,30 @@ weather <- read.csv(here("data", "NOAA_daily_summaries.csv"))
 
 - **Trends in abundance of wintering waterbirds relative to rainfall patterns at a central California estuary, 1972-2015** [@stenzel2011]: This paper finds that there is a relationship between waterbirds and rainfall. They find that there is typically a negative relationship between the two, and that the relationship is stronger when looking at rainfall in the current year than in previous years. This is relevant to our study because we are looking at the relationship between waterfowl abundance and precipitation as well.
 
-## Preliminary code for analyses
-# Cleaning Data
+# Preliminary code for analyses
+
+## Cleaning Data
 
 ```{r}
 #| label: cleaning-birds
 
-birds_clean <- birds |> 
+birds_clean <- birds |>
   # convert observation date to date format
   mutate(
     observation_date = ymd(observation_date),
-    
+
     # create monthly grouping variable
     month = floor_date(observation_date,
                        unit = "month")
-  ) |> 
-  
+  ) |>
+
   # filter to only include waterfowl observations
   filter(
     e_bird_group == "Waterfowl",
-    
+
     # remove repeat observations
     repeat_observation == "No",
-    
+
     # keep observations within study period
     observation_date > ymd("2019-09-30"),
     observation_date < ymd("2025-10-01")
@@ -97,29 +119,7 @@ weather_clean <- weather |>
   )
 ```
 
-```{r}
-#| label: joining-data-frames
-
-# join bird and weather data by exact date
-bird_weather <- full_join(
-  x = birds_clean,
-  y = weather_clean,
-  
-  # match bird observation dates to weather dates
-  by = c("observation_date" = "DATE")
-) |> 
-  
-  # keep only variables of interest
-  select(
-    observation_date,
-    season,
-    species,
-    count,
-    PRCP
-  )
-```
-
-# Summaries
+## Summaries
 
 ```{r}
 #| label: monthly-precipitation
@@ -143,18 +143,42 @@ monthly_precip <- weather_clean |>
 #| label: monthly-waterfowl-abundance
 
 # calculate monthly abundance by species
-monthly_waterfowl <- birds_clean |> 
-  
+monthly_waterfowl <- birds_clean |>
+
   # group by month and species
-  group_by(month, species) |> 
-  
+  group_by(month, species) |>
+
   # sum bird counts within each month
   summarize(
     abundance = sum(count, na.rm = TRUE),
-    
+
     # remove grouping after summarizing
     .groups = "drop"
-  )
+  ) |>
+
+  # order species factor levels for stacked area plot
+  # arranging so similar colors are not adjacent in stack
+  mutate(species = factor(species, levels = c(
+    "Snow Goose",
+    "Ross's Goose",
+    "Cackling Goose (Aleutian)",
+    "Canada Goose",
+    "Greater White-fronted Goose",
+    "Ring-necked Duck",
+    "Redhead",
+    "Canvasback",
+    "Ruddy Duck",
+    "American Wigeon",
+    "Blue-winged Teal",
+    "Cinnamon Teal",
+    "Northern Pintail",
+    "Mallard",
+    "Northern Shoveler",
+    "Bufflehead",
+    "Hooded Merganser",
+    "Green-winged Teal",
+    "Gadwall"
+  )))
 ```
 
 ```{r}
@@ -175,57 +199,366 @@ total_monthly_waterfowl <- birds_clean |>
   )
 ```
 
-# Joining data
+## Joining data
 
 ```{r}
 #| label: joining-monthly-data
 
 # join monthly bird abundance with monthly precipitation
-bird_weather_monthly <- total_monthly_waterfowl |> 
-  
+bird_weather_monthly <- total_monthly_waterfowl |>
+
   # join by month
   left_join(monthly_precip,
-            by = "month") |> 
-  
+            by = "month") |>
+
   # arrange chronologically
-  arrange(month) |> 
-  
-  # create lagged precipitation variable
+  arrange(month) |>
+
+  # create lagged precipitation and month-of-year variables
   mutate(
-    
-    # previous month's precipitation
-    lagged_prcp = lag(monthly_prcp)
+
+    # previous month's precipitation (for figure 3)
+    lagged_prcp = lag(monthly_prcp),
+
+    # numeric month of year 1-12 (for figure 3 color scale)
+    month_of_year = month(month),
+
+    # season label derived from calendar month
+    # (Dec/Jan/Feb = Winter, Mar/Apr/May = Spring,
+    #  Jun/Jul/Aug = Summer, Sep/Oct/Nov = Fall)
+    season = case_when(
+      month(month) %in% c(12, 1, 2) ~ "Winter",
+      month(month) %in% c(3, 4, 5)  ~ "Spring",
+      month(month) %in% c(6, 7, 8)  ~ "Summer",
+      TRUE                           ~ "Fall"
+    ),
+    season = factor(season, levels = c("Winter", "Spring", "Summer", "Fall"))
   )
 ```
 
+```{r}
+#| label: seasonal-summary
+
+# step 1: sum abundance and precipitation within each season-year combination
+seasonal_by_year <- bird_weather_monthly |>
+
+  # extract water year (Oct = start of new water year)
+  mutate(
+    water_year = if_else(month(month) >= 10,
+                         year(month) + 1,
+                         year(month))
+  ) |>
+
+  group_by(season, water_year) |>
+  summarize(
+    # total waterfowl abundance for this season in this year
+    seasonal_abundance = sum(total_abundance, na.rm = TRUE),
+
+    # total precipitation for this season in this year
+    seasonal_prcp = sum(monthly_prcp, na.rm = TRUE),
+
+    .groups = "drop"
+  )
+
+# step 2: average each season's totals across all water years
+seasonal_summary <- seasonal_by_year |>
+
+  group_by(season) |>
+  summarize(
+    avg_abundance = mean(seasonal_abundance, na.rm = TRUE),
+    avg_prcp      = mean(seasonal_prcp, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+## Statistical analysis code
+```{r}
+#| label: linear-model
+
+# linear regression: does previous month's precipitation
+# predict total monthly waterfowl abundance?
+abundance_model <- lm(total_abundance ~ lagged_prcp,
+                      data = bird_weather_monthly)
+
+summary(abundance_model)
+```
+The linear regression of total monthly waterfowl abundance on previous month's precipitation showed no significant relationship (p > 0.05), supporting the visual interpretation of Figure 3.
+
+
 # Visualizations directly relevant to answering questions
 
-# Other exploratory visualizations
-
-
 ## Figure 1: Monthly precipitation through time
-![Monthly precipitation](figures/refined-precipitation.png)
+```{r}
+#| label: figure-1-precipitation
+#| fig-width: 10
+#| fig-height: 5
 
+ggplot(data = monthly_precip,
+       mapping = aes(x = month,
+                     y = monthly_prcp)) +
 
-Figure 1 depicts monthly precipitation trends at NCOS from water years 2020-2025. This figure lays out context for a potential relationship between precipitation and waterfowl abundance to be compared.
+  # shaded area beneath line for depth
+  geom_area(fill = "#4682B4", alpha = 0.25) +
+  geom_line(color = "#7EC8E3", linewidth = 0.8) +
+
+  scale_x_date(
+    date_breaks = "1 year",
+    date_labels = "%Y",
+    expand = c(0, 0)
+  ) +
+
+  scale_y_continuous(
+    expand = c(0, 0)
+  ) +
+
+  labs(
+    title = "Monthly Precipitation Through Time",
+    x     = "Date",
+    y     = "Monthly Precipitation (in)"
+  ) +
+
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.background  = element_rect(fill = "#1C2B2D", color = NA),
+    panel.background = element_rect(fill = "#243336", color = NA),
+    panel.grid.major = element_line(color = "#3A4F52", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    plot.title  = element_text(color = "#F0EAD6", size = 20, face = "bold",
+                               margin = margin(b = 12), hjust = 0),
+    axis.text   = element_text(color = "#B8C9C2", size = 10),
+    axis.title  = element_text(color = "#D4C9A8", size = 11),
+    axis.ticks  = element_line(color = "#3A4F52"),
+    plot.margin = margin(16, 20, 12, 16)
+  )
+```
+Figure 1 depicts total monthly precipitation (inches) at NCOS from water years 2020–2025, where the shaded area and line represent total precipitation summed across all days in each month. Precipitation follows a strongly seasonal pattern, peaking in winter months and dropping to near zero in summer. This figure provides environmental context for interpreting waterfowl abundance patterns, as precipitation may influence habitat conditions at NCOS.
 
 ## Figure 2: Monthly waterfowl abundance through time by species
-![Monthly waterfowl abundance](figures/refined-waterfowl-abundance.png)
-Figure 2 depicts monthly waterfowl abundance trends at NCOS from water years 2020-2025 across all waterfowl species. This figure also provides necessary context in exploring the potential relationship between precipitation and waterfowl abundance. We can begin to see that waterfowl abundance may have a negative relationship with precipitation, for example, 2020 was a relatively dry year, yet shows the highest waterfowl abundance, and 2024 was a relatively wet year, yet shows low waterfowl abundance.
+```{r}
+#| label: figure-2-waterfowl
+#| fig-width: 11
+#| fig-height: 7
 
-## Figure 3: Lagged precipitation vs. species abundance
-![Lagged precipitation vs waterfowl abundance](figures/refined-lagged-precip-abundance.png)
-Figure 3 depicts the relationship between total monthly waterfowl abundance and the previous months precipitation. A lagged precipitation variable was used in order to show a potential predictive effect. Overall, the figure shows little to no clear trend, allowing us to conclude that there is no prominent effect of precipitation on waterfowl abundance.
+# color palette for all 19 species
+waterfowl_colors <- c(
+  "American Wigeon"             = "#C1440E",
+  "Blue-winged Teal"            = "#1B6CA8",
+  "Bufflehead"                  = "#E8A838",
+  "Cackling Goose (Aleutian)"   = "#9DBF9E",
+  "Canada Goose"                = "#6B8E23",
+  "Canvasback"                  = "#B22222",
+  "Cinnamon Teal"               = "#A0522D",
+  "Gadwall"                     = "#8FBC8F",
+  "Greater White-fronted Goose" = "#D2B48C",
+  "Green-winged Teal"           = "#2E8B57",
+  "Hooded Merganser"            = "#20B2AA",
+  "Mallard"                     = "#4682B4",
+  "Northern Pintail"            = "#5F9EA0",
+  "Northern Shoveler"           = "#3CB371",
+  "Redhead"                     = "#8B1A1A",
+  "Ring-necked Duck"            = "#6A5ACD",
+  "Ross's Goose"                = "#F4E4B8",
+  "Ruddy Duck"                  = "#CD853F",
+  "Snow Goose"                  = "#B0C4DE"
+)
+
+ggplot(data = monthly_waterfowl,
+       mapping = aes(x = month,
+                     y = abundance,
+                     fill = species)) +
+
+  # border lines between layers to reduce muddiness
+  geom_area(color = "#1C2B2D", linewidth = 0.15, alpha = 0.92) +
+
+  scale_fill_manual(values = waterfowl_colors) +
+
+  scale_x_date(
+    date_breaks = "1 year",
+    date_labels = "%Y",
+    expand = c(0, 0)
+  ) +
+
+  scale_y_continuous(expand = c(0, 0)) +
+
+  labs(
+    title = "Monthly Waterfowl Abundance Through Time",
+    x     = "Date",
+    y     = "Monthly Abundance (individuals)",
+    fill  = NULL,
+    # note the large GWFG flock count for transparency
+    caption = "Note: the January 2023 peak includes a single-point count of 91
+Greater White-fronted Geese — a plausible but unusually large flock for this site."
+  ) +
+
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.background  = element_rect(fill = "#1C2B2D", color = NA),
+    panel.background = element_rect(fill = "#243336", color = NA),
+    panel.grid.major = element_line(color = "#3A4F52", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    plot.title   = element_text(color = "#F0EAD6", size = 20, face = "bold",
+                                margin = margin(b = 12), hjust = 0),
+    plot.caption = element_text(color = "#7A9A95", size = 8, hjust = 0,
+                                margin = margin(t = 8)),
+    axis.text    = element_text(color = "#B8C9C2", size = 10),
+    axis.title   = element_text(color = "#D4C9A8", size = 11),
+    axis.ticks   = element_line(color = "#3A4F52"),
+    legend.position   = "right",
+    legend.background = element_rect(fill = "#1C2B2D", color = NA),
+    legend.key        = element_rect(fill = NA, color = NA),
+    legend.text       = element_text(color = "#F0EAD6", size = 8.5),
+    legend.key.size   = unit(0.45, "cm"),
+    legend.spacing.y  = unit(0.1, "cm"),
+    plot.margin = margin(16, 20, 12, 16)
+  )
+```
+Figure 2 depicts total monthly waterfowl abundance at NCOS from water years 2020–2025, where each colored layer represents the summed monthly count of one waterfowl species, stacked to show total abundance across all species. Note: three species (Blue-winged Teal, Cackling Goose (Aleutian), Canvasback) are present in the data set but not visible due to very low counts (≤7 individuals total). Abundance is highest in early 2020 and generally declines through the study period, with peaks concentrated in winter months. This figure directly addresses our question of how waterfowl abundance varies through time at NCOS.
+
+## Figure 3: Figure 3: Lagged precipitation vs. total waterfowl abundance
+```{r}
+#| label: figure-3-lagged-precip
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(data = bird_weather_monthly,
+       mapping = aes(x = lagged_prcp,
+                     y = total_abundance,
+                     # color by month of year (1-12) to show seasonal patterns
+                     color = month_of_year)) +
+
+  geom_point(alpha = 0.85, size = 4) +
+
+  scale_color_viridis_c(
+    name   = "Month",
+    option = "turbo",
+    breaks = c(1, 3, 5, 7, 9, 11),
+    labels = c("Jan", "Mar", "May", "Jul", "Sep", "Nov"),
+    limits = c(1, 12)
+  ) +
+
+  labs(
+    title   = "Relationship Between Precipitation and Waterfowl Abundance",
+    x       = "Previous Month's Precipitation (in)",
+    y       = "Total Monthly Waterfowl Abundance (individuals)",
+    caption = "Each point represents one month's waterfowl abundance plotted
+against the previous month's precipitation. Points colored by month of year."
+  ) +
+
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.background  = element_rect(fill = "#1C2B2D", color = NA),
+    panel.background = element_rect(fill = "#243336", color = NA),
+    panel.grid.major = element_line(color = "#3A4F52", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    plot.title   = element_text(color = "#F0EAD6", size = 20, face = "bold",
+                                margin = margin(b = 12), hjust = 0),
+    plot.caption = element_text(color = "#7A9A95", size = 8.5, hjust = 0,
+                                margin = margin(t = 8)),
+    axis.text    = element_text(color = "#B8C9C2", size = 10),
+    axis.title   = element_text(color = "#D4C9A8", size = 11),
+    axis.ticks   = element_line(color = "#3A4F52"),
+    legend.background = element_rect(fill = "#1C2B2D", color = NA),
+    legend.key        = element_rect(fill = NA, color = NA),
+    legend.text       = element_text(color = "#F0EAD6", size = 9),
+    legend.title      = element_text(color = "#D4C9A8", size = 10, face = "bold"),
+    legend.key.height = unit(1.2, "cm"),
+    plot.margin = margin(16, 20, 12, 16)
+  )
+```
+Figure 3 depicts the relationship between total monthly waterfowl abundance and the previous month's total precipitation at NCOS from water years 2020–2025, where each point represents one month colored by month of year. The figure shows no clear linear trend between lagged precipitation and waterfowl abundance, suggesting that the previous month's precipitation does not strongly predict waterfowl abundance at NCOS. This figure directly addresses our primary research question about the effect of precipitation on waterfowl abundance.
 
 # Other exploratory visualizations
 
 ## Figure 4: Average seasonal trends comparing waterfowl abundance and precipitation
-![Seasonal trends of waterfowl and precipitation](figures/refined-seasonal-abundance-precip.png)
-Figure 4 uses a facet graph to compare average seasonal precipitation and waterfowl abundance across water years 2020-2025. While this graph may at first contradict the previous figures' notions, showing similar trends between the two variables across seasons, we can assume similar seasonal trends for waterfowl and precipitation, although having no direct effect on each other. This figure can be used in our elective interpretive trail sign to show potential trail visitors when the best time of the year to see waterfowl are (it may also just happen to be the wettest times of the year).
+```{r}
+#| label: figure-4-seasonal-abundance-precip
+#| fig-width: 9
+#| fig-height: 8
 
+# shared theme
+seasonal_theme <- theme_minimal(base_size = 13) +
+  theme(
+    plot.background  = element_rect(fill = "#1C2B2D", color = NA),
+    panel.background = element_rect(fill = "#243336", color = NA),
+    panel.grid.major = element_line(color = "#3A4F52", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    plot.title  = element_text(color = "#F0EAD6", size = 14, face = "bold",
+                               margin = margin(b = 8), hjust = 0),
+    axis.text   = element_text(color = "#B8C9C2", size = 10),
+    axis.title  = element_text(color = "#D4C9A8", size = 11),
+    axis.ticks  = element_line(color = "#3A4F52"),
+    plot.margin = margin(12, 20, 8, 16)
+  )
+
+# panel A
+plot_abundance <- ggplot() +
+  geom_point(
+    data     = seasonal_by_year,
+    mapping  = aes(x = season, y = seasonal_abundance, group = 1),
+    color    = "#7EC8E3", alpha = 0.35, size = 2.5,
+    position = position_jitter(width = 0.08, seed = 42)
+  ) +
+  geom_line(
+    data    = seasonal_summary,
+    mapping = aes(x = season, y = avg_abundance, group = 1),
+    color = "#7EC8E3", linewidth = 1.2
+  ) +
+  geom_point(
+    data    = seasonal_summary,
+    mapping = aes(x = season, y = avg_abundance, group = 1),
+    color = "#7EC8E3", size = 4
+  ) +
+  labs(
+    title = "Average Total Seasonal Waterfowl Abundance",
+    x     = "Season",
+    y     = "Abundance (individuals)"
+  ) +
+  seasonal_theme
+
+# panel B
+plot_precip <- ggplot() +
+  geom_point(
+    data     = seasonal_by_year,
+    mapping  = aes(x = season, y = seasonal_prcp, group = 1),
+    color    = "#6B8E23", alpha = 0.35, size = 2.5,
+    position = position_jitter(width = 0.08, seed = 42)
+  ) +
+  geom_line(
+    data    = seasonal_summary,
+    mapping = aes(x = season, y = avg_prcp, group = 1),
+    color = "#6B8E23", linewidth = 1.2
+  ) +
+  geom_point(
+    data    = seasonal_summary,
+    mapping = aes(x = season, y = avg_prcp, group = 1),
+    color = "#6B8E23", size = 4
+  ) +
+  labs(
+    title = "Average Total Seasonal Precipitation",
+    x     = "Season",
+    y     = "Precipitation (in)"
+  ) +
+  seasonal_theme
+
+# combine
+combined_plot <- (plot_abundance / plot_precip) +
+  plot_annotation(
+    title   = "Seasonal Patterns in Waterfowl Abundance and Precipitation",
+    caption = "Points show individual water-year seasonal totals; lines show averages across water years 2020-2025.",
+    theme   = theme(
+      plot.background = element_rect(fill = "#1C2B2D", color = NA),
+      plot.title      = element_text(color = "#F0EAD6", size = 18, face = "bold",
+                                     hjust = 0, margin = margin(b = 10)),
+      plot.caption    = element_text(color = "#7A9A95", size = 8.5, hjust = 0,
+                                     margin = margin(t = 8))
+    )
+  )
+
+combined_plot
+```
+Figure 4 uses two stacked panels to compare average total seasonal waterfowl abundance and average total seasonal precipitation across water years 2020-2025. Small points show individual water-year seasonal totals to display the spread of observations; larger points and lines show the average across all water years. Both variables are highest in winter and lowest in summer, suggesting that waterfowl and precipitation follow similar seasonal patterns. However, Figure 3 indicates this parallel trend does not reflect a direct causal relationship. This figure contextualizes our main question by showing that seasonal timing, rather than precipitation amount, may better explain patterns in waterfowl abundance at NCOS.
 
 # Plan for elective
-
 
 ## Conecpt
 
