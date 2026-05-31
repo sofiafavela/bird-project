@@ -377,6 +377,7 @@ ggsave(
   width = 11, height = 7, bg = "#1C2B2D"
 )
 ```
+Three species (Blue-winged Teal, Cackling Goose (Aleutian), Canvasback) are present in the data set but not visible due to very low counts (≤7 individuals total).
 
 ## Figure 3: Lagged Precipation vs Waterfowl Abundance
 
