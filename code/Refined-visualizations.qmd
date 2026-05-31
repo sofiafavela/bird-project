@@ -461,18 +461,18 @@ seasonal_theme <- theme_minimal(base_size = 13) +
 # panel A
 plot_abundance <- ggplot() +
   geom_point(
-    data     = seasonal_summary,
+    data     = seasonal_by_year,
     mapping  = aes(x = season, y = seasonal_abundance, group = 1),
     color    = "#7EC8E3", alpha = 0.35, size = 2.5,
     position = position_jitter(width = 0.08, seed = 42)
   ) +
   geom_line(
-    data    = seasonal_avgs,
+    data    = seasonal_summary,
     mapping = aes(x = season, y = avg_abundance, group = 1),
     color = "#7EC8E3", linewidth = 1.2
   ) +
   geom_point(
-    data    = seasonal_avgs,
+    data    = seasonal_summary,
     mapping = aes(x = season, y = avg_abundance, group = 1),
     color = "#7EC8E3", size = 4
   ) +
@@ -486,18 +486,18 @@ plot_abundance <- ggplot() +
 # panel B
 plot_precip <- ggplot() +
   geom_point(
-    data     = seasonal_summary,
+    data     = seasonal_by_year,
     mapping  = aes(x = season, y = seasonal_prcp, group = 1),
     color    = "#6B8E23", alpha = 0.35, size = 2.5,
     position = position_jitter(width = 0.08, seed = 42)
   ) +
   geom_line(
-    data    = seasonal_avgs,
+    data    = seasonal_summary,
     mapping = aes(x = season, y = avg_prcp, group = 1),
     color = "#6B8E23", linewidth = 1.2
   ) +
   geom_point(
-    data    = seasonal_avgs,
+    data    = seasonal_summary,
     mapping = aes(x = season, y = avg_prcp, group = 1),
     color = "#6B8E23", size = 4
   ) +
