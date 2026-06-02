@@ -144,20 +144,11 @@ monthly_precip <- weather_clean |>
 
 # calculate monthly abundance by species
 monthly_waterfowl <- birds_clean |>
-
-  # group by month and species
   group_by(month, species) |>
-
-  # sum bird counts within each month
   summarize(
     abundance = sum(count, na.rm = TRUE),
-
-    # remove grouping after summarizing
     .groups = "drop"
   ) |>
-
-  # order species factor levels for stacked area plot
-  # arranging so similar colors are not adjacent in stack
   mutate(species = factor(species, levels = c(
     "Snow Goose",
     "Ross's Goose",
@@ -185,16 +176,14 @@ monthly_waterfowl <- birds_clean |>
 #| label: total-monthly-waterfowl
 
 # calculate total monthly waterfowl abundance
-total_monthly_waterfowl <- birds_clean |> 
+total_monthly_waterfowl <- birds_clean |>
   
   # group by month
-  group_by(month) |> 
+  group_by(month) |>
   
   # sum all bird counts within each month
   summarize(
     total_abundance = sum(count, na.rm = TRUE),
-    
-    # remove grouping after summarizing
     .groups = "drop"
   )
 ```
@@ -367,8 +356,8 @@ ggplot(data = monthly_waterfowl,
                      y = abundance,
                      fill = species)) +
 
-  # border lines between layers to reduce muddiness
-  geom_area(color = "#1C2B2D", linewidth = 0.15, alpha = 0.92) +
+  # change geom_area to geom_col
+  geom_col(color = "#1C2B2D", linewidth = 0.1) +
 
   scale_fill_manual(values = waterfowl_colors) +
 
@@ -385,9 +374,6 @@ ggplot(data = monthly_waterfowl,
     x     = "Date",
     y     = "Monthly Abundance (individuals)",
     fill  = NULL,
-    # note the large GWFG flock count for transparency
-    caption = "Note: the January 2023 peak includes a single-point count of 91
-Greater White-fronted Geese — a plausible but unusually large flock for this site."
   ) +
 
   theme_minimal(base_size = 13) +
@@ -562,7 +548,7 @@ Figure 4 uses two stacked panels to compare average total seasonal waterfowl abu
 
 ## Conecpt
 
-We want to create a tangible brochure to be available along the NCOS trail. It will serve as a visitor's guide to waterfowl spotting, featuring the most prevalent of our 19 waterfowl species observed in the dataset.
+We want to create a tangible brochure to be available along the NCOS trail. It will serve as a visitor's guide to waterfowl spotting, featuring the most prevalent of our 19 waterfowl species observed in the data set.
 
 ## Proposed Layout
 
