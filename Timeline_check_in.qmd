@@ -398,7 +398,7 @@ ggplot(data = monthly_waterfowl,
     plot.margin = margin(16, 20, 12, 16)
   )
 ```
-Figure 2 depicts total monthly waterfowl abundance at NCOS from water years 2020–2025, where each colored layer represents the summed monthly count of one waterfowl species, stacked to show total abundance across all species. Note: three species (Blue-winged Teal, Cackling Goose (Aleutian), Canvasback) are present in the data set but not visible due to very low counts (≤7 individuals total). Abundance is highest in early 2020 and generally declines through the study period, with peaks concentrated in winter months. This figure directly addresses our question of how waterfowl abundance varies through time at NCOS.
+Figure 2 depicts total monthly waterfowl abundance at NCOS from water years 2020–2025, where each color represents the summed monthly count of one waterfowl species, stacked to show total abundance across all species. Note: three species (Blue-winged Teal, Cackling Goose (Aleutian), Canvasback) are present in the data set but not visible due to very low counts (≤7 individuals total). Abundance is highest in early 2020 and generally declines through the study period, with peaks concentrated in winter months. This figure directly addresses our question of how waterfowl abundance varies through time at NCOS.
 
 ## Figure 3: Figure 3: Lagged precipitation vs. total waterfowl abundance
 ```{r}

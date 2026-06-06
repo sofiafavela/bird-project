@@ -420,20 +420,11 @@ analyses}\label{preliminary-code-for-analyses}
 \begin{Highlighting}[]
 \CommentTok{\# calculate monthly abundance by species}
 \NormalTok{monthly\_waterfowl }\OtherTok{\textless{}{-}}\NormalTok{ birds\_clean }\SpecialCharTok{|\textgreater{}}
-
-  \CommentTok{\# group by month and species}
   \FunctionTok{group\_by}\NormalTok{(month, species) }\SpecialCharTok{|\textgreater{}}
-
-  \CommentTok{\# sum bird counts within each month}
   \FunctionTok{summarize}\NormalTok{(}
     \AttributeTok{abundance =} \FunctionTok{sum}\NormalTok{(count, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
-
-    \CommentTok{\# remove grouping after summarizing}
     \AttributeTok{.groups =} \StringTok{"drop"}
 \NormalTok{  ) }\SpecialCharTok{|\textgreater{}}
-
-  \CommentTok{\# order species factor levels for stacked area plot}
-  \CommentTok{\# arranging so similar colors are not adjacent in stack}
   \FunctionTok{mutate}\NormalTok{(}\AttributeTok{species =} \FunctionTok{factor}\NormalTok{(species, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}
     \StringTok{"Snow Goose"}\NormalTok{,}
     \StringTok{"Ross\textquotesingle{}s Goose"}\NormalTok{,}
@@ -461,16 +452,14 @@ analyses}\label{preliminary-code-for-analyses}
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# calculate total monthly waterfowl abundance}
-\NormalTok{total\_monthly\_waterfowl }\OtherTok{\textless{}{-}}\NormalTok{ birds\_clean }\SpecialCharTok{|\textgreater{}} 
+\NormalTok{total\_monthly\_waterfowl }\OtherTok{\textless{}{-}}\NormalTok{ birds\_clean }\SpecialCharTok{|\textgreater{}}
   
   \CommentTok{\# group by month}
-  \FunctionTok{group\_by}\NormalTok{(month) }\SpecialCharTok{|\textgreater{}} 
+  \FunctionTok{group\_by}\NormalTok{(month) }\SpecialCharTok{|\textgreater{}}
   
   \CommentTok{\# sum all bird counts within each month}
   \FunctionTok{summarize}\NormalTok{(}
     \AttributeTok{total\_abundance =} \FunctionTok{sum}\NormalTok{(count, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
-    
-    \CommentTok{\# remove grouping after summarizing}
     \AttributeTok{.groups =} \StringTok{"drop"}
 \NormalTok{  )}
 \end{Highlighting}
@@ -678,8 +667,8 @@ species}\label{figure-2-monthly-waterfowl-abundance-through-time-by-species}
                      \AttributeTok{y =}\NormalTok{ abundance,}
                      \AttributeTok{fill =}\NormalTok{ species)) }\SpecialCharTok{+}
 
-  \CommentTok{\# border lines between layers to reduce muddiness}
-  \FunctionTok{geom\_area}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#1C2B2D"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.15}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.92}\NormalTok{) }\SpecialCharTok{+}
+  \CommentTok{\# change geom\_area to geom\_col}
+  \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{color =} \StringTok{"\#1C2B2D"}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{0.1}\NormalTok{) }\SpecialCharTok{+}
 
   \FunctionTok{scale\_fill\_manual}\NormalTok{(}\AttributeTok{values =}\NormalTok{ waterfowl\_colors) }\SpecialCharTok{+}
 
@@ -696,9 +685,6 @@ species}\label{figure-2-monthly-waterfowl-abundance-through-time-by-species}
     \AttributeTok{x     =} \StringTok{"Date"}\NormalTok{,}
     \AttributeTok{y     =} \StringTok{"Monthly Abundance (individuals)"}\NormalTok{,}
     \AttributeTok{fill  =} \ConstantTok{NULL}\NormalTok{,}
-    \CommentTok{\# note the large GWFG flock count for transparency}
-    \AttributeTok{caption =} \StringTok{"Note: the January 2023 peak includes a single{-}point count of 91}
-\StringTok{Greater White{-}fronted Geese — a plausible but unusually large flock for this site."}
 \NormalTok{  ) }\SpecialCharTok{+}
 
   \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{13}\NormalTok{) }\SpecialCharTok{+}
@@ -728,9 +714,9 @@ species}\label{figure-2-monthly-waterfowl-abundance-through-time-by-species}
 \pandocbounded{\includegraphics[keepaspectratio]{Timeline_check_in_files/figure-pdf/figure-2-waterfowl-1.pdf}}
 
 Figure 2 depicts total monthly waterfowl abundance at NCOS from water
-years 2020--2025, where each colored layer represents the summed monthly
-count of one waterfowl species, stacked to show total abundance across
-all species. Note: three species (Blue-winged Teal, Cackling Goose
+years 2020--2025, where each color represents the summed monthly count
+of one waterfowl species, stacked to show total abundance across all
+species. Note: three species (Blue-winged Teal, Cackling Goose
 (Aleutian), Canvasback) are present in the data set but not visible due
 to very low counts (≤7 individuals total). Abundance is highest in early
 2020 and generally declines through the study period, with peaks
@@ -913,7 +899,7 @@ waterfowl abundance at NCOS.
 We want to create a tangible brochure to be available along the NCOS
 trail. It will serve as a visitor's guide to waterfowl spotting,
 featuring the most prevalent of our 19 waterfowl species observed in the
-dataset.
+data set.
 
 \subsection{Proposed Layout}\label{proposed-layout}
 
